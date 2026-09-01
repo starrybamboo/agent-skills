@@ -1,0 +1,4 @@
+interface:
+  display_name: "Simplify Code"
+  short_description: "Remove code complexity without changing behavior"
+  default_prompt: "Use $simplify-code to remove implementation complexity without changing approved behavior."

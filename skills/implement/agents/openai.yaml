@@ -1,0 +1,5 @@
+interface:
+  display_name: "Implement"
+  short_description: "Orchestrate specs; build tickets directly"
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "repository": "starrybamboo/agent-skills",
+  "sourceUrl": "https://github.com/starrybamboo/agent-skills.git",
+  "defaultBranch": "main",
+  "origins": {
+    "original": {
+      "repository": "starrybamboo/agent-skills",
+      "license": "MIT",
+      "licenseFile": "LICENSE"
+    },
+    "mattpocock": {
+      "repository": "mattpocock/skills",
+      "revision": "bb8fdc3fd12ce9729bb61f0885f51a420c3275ac",
+      "license": "MIT",
+      "licenseFile": "licenses/mattpocock-skills-MIT.txt"
+    }
+  },
+  "skills": [
+    { "name": "afk", "path": "skills/afk", "origin": "original" },
+    { "name": "ask-matt", "path": "skills/ask-matt", "origin": "mattpocock" },
+    { "name": "code-review", "path": "skills/code-review", "origin": "mattpocock" },
+    { "name": "codebase-design", "path": "skills/codebase-design", "origin": "mattpocock" },
+    { "name": "diagnosing-bugs", "path": "skills/diagnosing-bugs", "origin": "mattpocock" },
+    { "name": "domain-modeling", "path": "skills/domain-modeling", "origin": "mattpocock" },
+    { "name": "false-green", "path": "skills/false-green", "origin": "original" },
+    { "name": "grill-me", "path": "skills/grill-me", "origin": "mattpocock" },
+    { "name": "grill-with-docs", "path": "skills/grill-with-docs", "origin": "mattpocock" },
+    { "name": "grilling", "path": "skills/grilling", "origin": "mattpocock" },
+    { "name": "handoff", "path": "skills/handoff", "origin": "mattpocock" },
+    { "name": "implement", "path": "skills/implement", "origin": "mattpocock" },
+    { "name": "improve-codebase-architecture", "path": "skills/improve-codebase-architecture", "origin": "mattpocock" },
+    { "name": "prototype", "path": "skills/prototype", "origin": "mattpocock" },
+    { "name": "reduce-complexity", "path": "skills/reduce-complexity", "origin": "original" },
+    { "name": "research", "path": "skills/research", "origin": "mattpocock" },
+    { "name": "resolving-merge-conflicts", "path": "skills/resolving-merge-conflicts", "origin": "mattpocock" },
+    { "name": "setup-matt-pocock-skills", "path": "skills/setup-matt-pocock-skills", "origin": "mattpocock" },
+    { "name": "shared-skills-manager", "path": "skills/shared-skills-manager", "origin": "original" },
+    { "name": "simplify-code", "path": "skills/simplify-code", "origin": "original" },
+    { "name": "tdd", "path": "skills/tdd", "origin": "mattpocock" },
+    { "name": "teach", "path": "skills/teach", "origin": "mattpocock" },
+    { "name": "to-questionnaire", "path": "skills/to-questionnaire", "origin": "mattpocock" },
+    { "name": "to-spec", "path": "skills/to-spec", "origin": "mattpocock" },
+    { "name": "to-tickets", "path": "skills/to-tickets", "origin": "mattpocock" },
+    { "name": "triage", "path": "skills/triage", "origin": "mattpocock" },
+    { "name": "unslop", "path": "skills/unslop", "origin": "original" },
+    { "name": "wait-what", "path": "skills/wait-what", "origin": "mattpocock" },
+    { "name": "wayfinder", "path": "skills/wayfinder", "origin": "mattpocock" },
+    { "name": "wizard", "path": "skills/wizard", "origin": "mattpocock" },
+    { "name": "writing-for-agents", "path": "skills/writing-for-agents", "origin": "mattpocock" }
+  ]
+}

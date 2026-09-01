@@ -1,0 +1,6 @@
+interface:
+  display_name: "False Green Audit"
+  short_description: "Comprehensively audit test evidence and gates"
+  default_prompt: "Use $false-green to comprehensively audit these tests and verification gates for false-green results."
+policy:
+  allow_implicit_invocation: false

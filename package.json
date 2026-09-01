@@ -1,0 +1,16 @@
+{
+  "name": "starrybamboo-agent-skills",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Public reusable agent skills curated by starrybamboo",
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate-skills.mjs",
+    "test:manager": "node scripts/test-manager.mjs",
+    "test": "npm run validate && npm run test:manager"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

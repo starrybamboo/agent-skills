@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reduce Spec Complexity"
+  short_description: "Audit spec complexity before implementation"
+  default_prompt: "Use $reduce-complexity to simplify this spec without moving complexity elsewhere."

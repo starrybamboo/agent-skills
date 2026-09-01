@@ -1,0 +1,6 @@
+interface:
+  display_name: "AFK"
+  short_description: "Finish independent scoped work while the user is away"
+  default_prompt: "Use $afk to advance safe in-scope work while I am away without waiting on unrelated suspended tasks."
+policy:
+  allow_implicit_invocation: true

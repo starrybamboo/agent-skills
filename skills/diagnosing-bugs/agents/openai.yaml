@@ -1,0 +1,4 @@
+interface:
+  display_name: "Diagnosing Difficult Bugs"
+  short_description: "Structured diagnosis for stubborn, risky bugs"
+  default_prompt: "Use $diagnosing-bugs to investigate this exceptionally difficult bug."
