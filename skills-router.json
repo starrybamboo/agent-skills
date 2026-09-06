@@ -72,8 +72,8 @@
     {
       "name": "implement",
       "entrypoint": "skills/implement/SKILL.md",
-      "description": "Implement one ticket directly, or coordinate unbounded ticket workers through an orchestra hierarchy.",
-      "disableModelInvocation": false
+      "description": "Implement a piece of work based on a spec or set of tickets.",
+      "disableModelInvocation": true
     },
     {
       "name": "improve-codebase-architecture",
