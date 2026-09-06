@@ -95,7 +95,7 @@ function parseScalar(rawValue) {
   return value;
 }
 
-function readFrontmatter(text, filePath) {
+export function readFrontmatter(text, filePath) {
   const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
   if (!match) throw new Error(`${filePath}: missing YAML frontmatter`);
   const fields = {};

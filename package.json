@@ -5,7 +5,9 @@
   "description": "Public reusable agent skills curated by starrybamboo",
   "type": "module",
   "scripts": {
-    "validate": "node scripts/validate-skills.mjs",
+    "generate:router": "node scripts/generate-skills-router.mjs",
+    "check:router": "node scripts/generate-skills-router.mjs --check",
+    "validate": "node scripts/validate-skills.mjs && npm run check:router",
     "test:manager": "node scripts/test-manager.mjs",
     "test": "npm run validate && npm run test:manager"
   },

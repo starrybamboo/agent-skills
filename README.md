@@ -35,6 +35,18 @@ An automatic run never edits this repository, commits, pushes, or merges upstrea
 
 This repository contains only reusable, project-independent workflows. Product-specific procedures, company-internal systems, credentials, private addresses, personal data, and local machine paths are excluded. `skills-manifest.json` records the origin and license of every skill.
 
+## Cloud routing catalog
+
+`skills-router.json` is the machine-readable discovery catalog for chat surfaces that can read this repository but cannot install local Agent Skills. It is generated from `skills-manifest.json` plus each skill's `SKILL.md` frontmatter.
+
+Do not edit `skills-router.json` by hand. After adding a skill or changing `name`, `description`, or `disable-model-invocation`, regenerate it:
+
+```bash
+npm run generate:router
+```
+
+`npm test` checks that the generated routing catalog is current.
+
 The selected Matt Pocock skills remain under Matt Pocock's MIT license. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Original material in this repository is MIT licensed under [LICENSE](LICENSE).
 
 ## Validate

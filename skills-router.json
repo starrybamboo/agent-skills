@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "repository": "starrybamboo/agent-skills",
+  "defaultBranch": "main",
+  "skills": [
+    {
+      "name": "afk",
+      "entrypoint": "skills/afk/SKILL.md",
+      "description": "Continue already-authorized work while the user is away from the keyboard, sleeping, eating, commuting, or otherwise unavailable. Use when the user says they are leaving and wants Codex to keep working, monitor tasks, finish, babysit, or perform cleanup without further interaction. Advance independent wrap-up while leaving unrelated suspended work untouched; resolve only blocking in-scope choices from established preferences, project instructions, code evidence, and the simplest-correct default.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "ask-matt",
+      "entrypoint": "skills/ask-matt/SKILL.md",
+      "description": "Ask which skill or flow fits your situation. A router over the skills in this repo.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "code-review",
+      "entrypoint": "skills/code-review/SKILL.md",
+      "description": "Review committed and work-in-progress changes since a fixed point (commit, branch, tag, or merge-base) along two axes — Standards (does the code follow this repo's documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to \"review since X\".",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "codebase-design",
+      "entrypoint": "skills/codebase-design/SKILL.md",
+      "description": "Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "diagnosing-bugs",
+      "entrypoint": "skills/diagnosing-bugs/SKILL.md",
+      "description": "Structured feedback-loop diagnosis for exceptionally difficult, stubborn, recurring, high-regression-risk, or previously misfixed bugs. Ordinary, localized, first-pass bugs stay outside this skill.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "domain-modeling",
+      "entrypoint": "skills/domain-modeling/SKILL.md",
+      "description": "Build and sharpen a project's domain model. Use when the user wants to pin down domain terminology or a ubiquitous language, record an architectural decision, or when another skill needs to maintain the domain model.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "false-green",
+      "entrypoint": "skills/false-green/SKILL.md",
+      "description": "Run a comprehensive false-green audit of tests and their verification gates.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "grill-me",
+      "entrypoint": "skills/grill-me/SKILL.md",
+      "description": "A relentless interview to sharpen a plan or design.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "grill-with-docs",
+      "entrypoint": "skills/grill-with-docs/SKILL.md",
+      "description": "A relentless interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "grilling",
+      "entrypoint": "skills/grilling/SKILL.md",
+      "description": "Grill the user relentlessly about a plan, decision, or idea, from its design intent through an implementable shape. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "handoff",
+      "entrypoint": "skills/handoff/SKILL.md",
+      "description": "Curate a loss-minimizing handoff to another task or person. Use when the user asks for a handoff, an authorized workflow needs a portable side branch, or an orchestra still has substantial work near 350K context tokens and should transfer before roughly 400K.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "implement",
+      "entrypoint": "skills/implement/SKILL.md",
+      "description": "Implement one ticket directly, or coordinate unbounded ticket workers through an orchestra hierarchy.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "improve-codebase-architecture",
+      "entrypoint": "skills/improve-codebase-architecture/SKILL.md",
+      "description": "Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "prototype",
+      "entrypoint": "skills/prototype/SKILL.md",
+      "description": "Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic feels right, or explore what a UI should look like.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "reduce-complexity",
+      "entrypoint": "skills/reduce-complexity/SKILL.md",
+      "description": "Reduce accidental complexity in ideas, plans, ADRs, and specifications before implementation. Use for a spec audit, subtraction audit, complexity budget, simpler architecture, or over-engineering review at the product and architecture surface; use simplify-code for implementation changes.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "research",
+      "entrypoint": "skills/research/SKILL.md",
+      "description": "Investigate a question against high-trust primary sources and deliver findings in Markdown by default, using HTML only for an explicitly requested polished human-facing report. Use when the user wants a topic researched, docs or API facts gathered, or reading legwork delegated to a background agent.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "resolving-merge-conflicts",
+      "entrypoint": "skills/resolving-merge-conflicts/SKILL.md",
+      "description": "Use when you need to resolve an in-progress git merge/rebase conflict.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "setup-matt-pocock-skills",
+      "entrypoint": "skills/setup-matt-pocock-skills/SKILL.md",
+      "description": "Configure this repo for the engineering skills — set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "shared-skills-manager",
+      "entrypoint": "skills/shared-skills-manager/SKILL.md",
+      "description": "Install, update, inspect, or schedule updates for the public starrybamboo/agent-skills catalog. Invoke explicitly with setup, update, status, pause, resume, disable, or schedule.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "simplify-code",
+      "entrypoint": "skills/simplify-code/SKILL.md",
+      "description": "Simplify existing implementation code, tests, modules, state, or operational machinery without changing approved behavior, architecture, or failure policy. Use when the user asks to simplify code, remove over-engineering, clean up a reviewed diff, or when an authorized implementation workflow reaches its final simplification pass.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "tdd",
+      "entrypoint": "skills/tdd/SKILL.md",
+      "description": "Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions \"red-green-refactor\", or wants integration tests.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "teach",
+      "entrypoint": "skills/teach/SKILL.md",
+      "description": "Teach the user a new skill or concept, within this workspace.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "to-questionnaire",
+      "entrypoint": "skills/to-questionnaire/SKILL.md",
+      "description": "Turn a decision you can't fully answer into a questionnaire for someone else to fill in.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "to-spec",
+      "entrypoint": "skills/to-spec/SKILL.md",
+      "description": "Turn the current conversation into a spec and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "to-tickets",
+      "entrypoint": "skills/to-tickets/SKILL.md",
+      "description": "Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker — edges as text in one file per ticket locally, or native blocking links on a real tracker.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "triage",
+      "entrypoint": "skills/triage/SKILL.md",
+      "description": "Move issues and external PRs through a state machine of triage roles — categorise, verify, grill if needed, and write agent-ready briefs.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "unslop",
+      "entrypoint": "skills/unslop/SKILL.md",
+      "description": "Remove stock AI phrasing, empty abstraction, promotional filler, rigid structure, and punctuation tells from natural-language prose while preserving its meaning and intended tone. Use whenever drafting, rewriting, polishing, or reviewing user-facing prose; skip code, exact quotations, and wording that must remain unchanged.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "wait-what",
+      "entrypoint": "skills/wait-what/SKILL.md",
+      "description": "Stop. That last message did not land — re-pitch it.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "wayfinder",
+      "entrypoint": "skills/wayfinder/SKILL.md",
+      "description": "Plan a huge chunk of work — more than one agent session can hold — as a shared map of decision tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "wizard",
+      "entrypoint": "skills/wizard/SKILL.md",
+      "description": "Generate an interactive bash wizard that walks a human through steps only they can perform. Use when provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover. Don't invoke this for steps the agent can perform itself.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "writing-for-agents",
+      "entrypoint": "skills/writing-for-agents/SKILL.md",
+      "description": "Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.",
+      "disableModelInvocation": false
+    }
+  ]
+}
