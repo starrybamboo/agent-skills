@@ -12,13 +12,13 @@
     {
       "name": "ask-matt",
       "entrypoint": "skills/ask-matt/SKILL.md",
-      "description": "Ask which skill or flow fits your situation. A router over the skills in this repo.",
+      "description": "Choose the smallest useful skill or workflow for the current situation.",
       "disableModelInvocation": true
     },
     {
       "name": "code-review",
       "entrypoint": "skills/code-review/SKILL.md",
-      "description": "Review committed and work-in-progress changes since a fixed point (commit, branch, tag, or merge-base) along two axes — Standards (does the code follow this repo's documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to \"review since X\".",
+      "description": "Review a branch, PR, or work-in-progress diff against a fixed base for correctness, requirements, and consequential coding standards. Use one combined reviewer by default and add reviewers only for distinct material risks.",
       "disableModelInvocation": false
     },
     {
@@ -66,13 +66,13 @@
     {
       "name": "handoff",
       "entrypoint": "skills/handoff/SKILL.md",
-      "description": "Curate a loss-minimizing handoff to another task or person. Use when the user asks for a handoff, an authorized workflow needs a portable side branch, or an orchestra still has substantial work near 350K context tokens and should transfer before roughly 400K.",
+      "description": "Curate a compact handoff when the user requests one, ownership moves, or substantial remaining work needs a fresh context. Preserve decisions, source pointers, exact state, and valid evidence.",
       "disableModelInvocation": false
     },
     {
       "name": "implement",
       "entrypoint": "skills/implement/SKILL.md",
-      "description": "Implement a piece of work based on a spec or set of tickets.",
+      "description": "Deliver scoped work from a request, spec, or tickets, with one owner and risk-based review.",
       "disableModelInvocation": true
     },
     {

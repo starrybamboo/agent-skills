@@ -2,6 +2,10 @@
 
 Public, project-independent agent skills curated by `starrybamboo`. The `main` branch is the maintainer-approved latest usable catalog.
 
+## Development workflow
+
+Default to one owner delivering the scoped outcome, with verification and review proportional to risk. The [workflow router](skills/ask-matt/SKILL.md) selects optional tools, [implementation](skills/implement/SKILL.md) owns delivery, and [code review](skills/code-review/SKILL.md) uses one combined reviewer by default. These are locally maintained adaptations; repository and user instructions take precedence.
+
 ## Install
 
 Install every skill globally for Codex:

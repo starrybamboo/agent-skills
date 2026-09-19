@@ -1,19 +1,14 @@
 ---
 name: handoff
-description: Curate a loss-minimizing handoff to another task or person. Use when the user asks for a handoff, an authorized workflow needs a portable side branch, or an orchestra still has substantial work near 350K context tokens and should transfer before roughly 400K.
+description: Curate a compact handoff when the user requests one, ownership moves, or substantial remaining work needs a fresh context. Preserve decisions, source pointers, exact state, and valid evidence.
 argument-hint: "What will the next session be used for?"
 ---
 
 A handoff is deliberate **semantic compression**: preserve the state that can change the next agent's decisions and remove transcript noise. Do not use automatic compaction or a full-history fork as the handoff artifact.
 
-## Automatic orchestra trigger
+## Decide whether transfer helps
 
-At each orchestra synchronization point, check any available context-usage signal.
-
-- From roughly 350K tokens onward, compare the remaining work with the cost of transfer.
-- If all workers are done and only final verification, tracker closure, or the completion report remains, finish in the current orchestra even near 400K.
-- If unresolved ticket frontiers, worker coordination, integration, or likely fix cycles remain, hand off at the next safe synchronization boundary and before roughly 400K.
-- When no exact meter is available, do not invent a count. Use a natural milestone once the task is clearly long and still has multiple material phases left.
+Continue locally when the remaining work is short or benefits from the existing context. A token count or synchronization point alone does not require handoff. For substantial remaining work, compare actual context problems and transfer cost; use a natural checkpoint when a new owner or fresh context would help. Automatic compaction does not invalidate completed work or require a restart.
 
 ## Curate the capsule
 
@@ -33,7 +28,7 @@ Save the capsule in the operating system's temporary directory, outside the work
 
 ## Deliver the capsule
 
-When the target is another Codex task and task creation is authorized by the user or the outer workflow, create a fresh task in the same approved project and checkout. Seed its initial prompt with the curated capsule and its recovery path. Do not seed it with the full conversation history.
+When the target is another Codex task and the user explicitly requested creation of that task, create a fresh task in the same approved project and checkout. Seed its initial prompt with the curated capsule and its recovery path. Do not seed it with the full conversation history.
 
 - For **succession**, transfer all live-work identifiers, wait until the successor task is ready, then stop dispatching or coordinating from the predecessor so there is one owner.
 - For a **side branch**, give the new task one bounded question and the parent task ID. Keep the parent as owner; return only the artifact pointers, evidence, and verdict needed to resolve that branch.
