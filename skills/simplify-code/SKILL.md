@@ -32,7 +32,7 @@ Completion criterion: the mode and behavior floor are explicit.
 
 Start from the requested area, changed diff, and review findings. Account for every materially added or expanded:
 
-- module, public interface, adapter, abstraction, configuration switch, or test seam;
+- module, public interface, adapter, abstraction, or configuration switch;
 - state, cache, duplicate fact, status, or state transition;
 - lock, scheduler, queue, background task, retry, compensation, or cleanup path;
 - fixture or test coupled to private structure.
@@ -59,7 +59,7 @@ Prefer, in order:
 2. collapse duplicate facts and representations;
 3. derive values instead of storing another state;
 4. merge shallow modules and hypothetical one-adapter seams into their owner;
-5. shrink public interfaces and keep test seams internal;
+5. shrink public interfaces;
 6. reuse an existing project mechanism;
 7. keep necessary complexity behind one deep module.
 
@@ -71,7 +71,7 @@ Completion criterion: every accepted change lowers total implementation and oper
 
 Keep tests for observable security, authorization, concurrency, transaction, idempotency, data integrity, wire, and historical regression behavior.
 
-Merge or remove tests that only restate private structure, annotations, exact collaborator order, or a production interface created only for tests. For every removed test, identify the surviving stable-seam test that still fails on regression.
+Merge or remove tests that only restate incidental structure or duplicate other checks. Before removing a test with valuable coverage, identify the surviving check that still fails on that regression.
 
 Completion criterion: each removed test is redundant or observes no valuable behavior.
 
@@ -81,7 +81,7 @@ In review-only mode, report the ledger and proposed reductions without changing 
 
 In mutation mode, apply the smallest coherent reduction. After each reduction cluster:
 
-1. run the narrow checks at the preserved seam;
+1. run the focused checks for the preserved behavior;
 2. run any broader checks required by the repository or request;
 3. inspect the diff for replacement abstractions and shifted obligations;
 4. compare the ledger before and after.

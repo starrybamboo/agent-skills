@@ -11,7 +11,7 @@ Review the requested surface. User and repository rules determine scope and requ
 - Ordinary code: one independent reviewer checks behavior, requirements, and consequential standards together. In a standalone review, the current reviewer fills this role; there is no default delegation.
 - Privacy, authorization, deletion, irreversible data changes, or critical transaction/concurrency behavior: start with one reviewer focused on the concrete failure modes. Add a second only when a distinct material risk needs separate expertise or independent challenge. State the risk and divide the scope before delegating.
 
-When implementation needs independence and delegation is authorized, use one bounded subagent with source pointers and an exact surface, not the full conversation. A coordinator who did not author the change may fill the reviewer role. Review of one's own implementation is self-review; if an independent reviewer is unavailable, report that limit rather than relabeling it or spawning a mandatory review tree. Honor explicit requests for multiple reviewers.
+When implementation needs independence and delegation is authorized, use one bounded subagent with source pointers and an exact surface, not the full conversation. An agent who did not author the change may fill the reviewer role. Review of one's own implementation is self-review; if an independent reviewer is unavailable, report that limit rather than relabeling it or spawning a mandatory review tree. Honor explicit requests for multiple reviewers.
 
 ## Pin scope and sources
 

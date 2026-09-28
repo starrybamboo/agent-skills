@@ -18,7 +18,7 @@ Write a standalone Markdown capsule containing:
 - decisions that still affect implementation, with their reasons, plus unresolved decisions;
 - pointers to specs, issues, ADRs, plans, commits, diffs, and other primary artifacts;
 - repository, branch, fixed point, current `HEAD`, dirty-path provenance, and any shared-worktree rules;
-- for an orchestra, the ticket graph and frontier plus every active worker task ID, host ID, wait cursor, assignment, status, commit, and blocker;
+- for ongoing concurrent work, the dependencies, assignments, status, and identifiers needed to resume or contact the active work;
 - verification already run, results, reproducible baseline failures, and remaining acceptance gates;
 - the exact next action and a `Suggested skills` section.
 

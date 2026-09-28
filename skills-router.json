@@ -72,7 +72,7 @@
     {
       "name": "implement",
       "entrypoint": "skills/implement/SKILL.md",
-      "description": "Deliver scoped work from a request, spec, or tickets, with one owner and risk-based review.",
+      "description": "Implement agreed work with timely verification and review.",
       "disableModelInvocation": true
     },
     {

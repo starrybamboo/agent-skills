@@ -104,6 +104,99 @@ try {
   const afterFailure = await catalogStatus({ homeDirectory, checkRemote: false });
   assert.equal(afterFailure.installedCommit, beforeFailure.installedCommit);
   assert.equal(afterFailure.discoverable, true);
+  assert.equal(afterFailure.lastRun.retainedCommit, beforeFailure.installedCommit);
+  assert.deepEqual(await fs.readdir(path.join(homeDirectory, ".agents", "agent-skills", "transactions")), []);
+
+  // Inject faults only in disposable homes; all cases run sequentially and restore fs.
+  async function checkRecoveryFailure(name, method, shouldFail, options = {}) {
+    const faultHome = path.join(temporaryRoot, name);
+    await fs.cp(homeDirectory, faultHome, { recursive: true });
+    const managerRoot = path.join(faultHome, ".agents", "agent-skills");
+    const context = {
+      skillPath: path.join(faultHome, ".agents", "skills", "afk"),
+      statePath: path.join(managerRoot, "state.json"),
+      lockPath: path.join(faultHome, ".agents", ".skill-lock.json"),
+      lastRunPath: path.join(managerRoot, "last-run.json"),
+    };
+    context.state = await fs.readFile(context.statePath, "utf8");
+    context.lock = await fs.readFile(context.lockPath, "utf8");
+    const original = fs[method];
+    let injected = false;
+    fs[method] = async (...args) => {
+      if (shouldFail(context, ...args)) {
+        injected = true;
+        throw Object.assign(new Error(`Injected ${name}`), { code: "EACCES" });
+      }
+      return original(...args);
+    };
+    let failure;
+    try {
+      await assert.rejects(applyCandidate(candidateThree, { homeDirectory: faultHome, ...options }), (error) => {
+        failure = error;
+        return true;
+      });
+    } finally {
+      fs[method] = original;
+    }
+    assert.equal(injected, true, `${name}: fault was exercised`);
+    const status = await catalogStatus({ homeDirectory: faultHome, checkRemote: false });
+    assert.equal(status.lastRun.status, "rollback-failed", name);
+    assert.equal(status.lastRun.retainedCommit, null, name);
+    assert.equal(status.lastRun.previousCommit, beforeFailure.installedCommit, name);
+    assert.ok(status.lastRun.rollbackErrors.some((error) => error.includes(`Injected ${name}`)), name);
+    assert.ok(failure.message.includes(`Injected ${name}`), name);
+    assert.ok(failure.message.includes(status.lastRun.error), name);
+    assert.ok(failure.message.includes(status.lastRun.recoveryPath), name);
+    assert.deepEqual(await fs.readdir(path.join(managerRoot, "transactions")), [path.basename(status.lastRun.recoveryPath)]);
+    assert.deepEqual(JSON.parse(await fs.readFile(path.join(status.lastRun.recoveryPath, "previous-metadata.json"), "utf8")), {
+      state: context.state, lock: context.lock,
+    });
+    if (method !== "writeFile") {
+      assert.equal(await hashDirectory(path.join(status.lastRun.recoveryPath, "backup", "afk")), beforeFailureHash);
+      assert.equal(status.discoverable, false, name);
+    }
+  }
+
+  await checkRecoveryFailure("directory-restore-failure", "rename",
+    (_context, from) => from.endsWith(path.join("backup", "afk")),
+    { simulateFailureAfterInstalls: 1 });
+  await checkRecoveryFailure("new-install-removal-failure", "rm",
+    (context, target) => target === context.skillPath,
+    { simulateFailureAfterInstalls: 1 });
+  for (const key of ["state", "lock"]) {
+    await checkRecoveryFailure(`${key}-restore-failure`, "writeFile", (context, target, content) =>
+      // Fail the update's final report, then fail restoration of one metadata file.
+      (target.startsWith(`${context.lastRunPath}.new-`) && JSON.parse(content).success === true)
+      || (target.startsWith(`${context[`${key}Path`]}.new-`) && content === context[key]));
+  }
+
+  const cleanupHome = path.join(temporaryRoot, "cleanup-failure");
+  await fs.cp(homeDirectory, cleanupHome, { recursive: true });
+  const originalRm = fs.rm;
+  let cleanupInjected = false;
+  fs.rm = async (target, ...args) => {
+    if (target.startsWith(path.join(cleanupHome, ".agents", "agent-skills", "transactions") + path.sep)) {
+      cleanupInjected = true;
+      // A recursive cleanup may have already deleted part of the backup.
+      await originalRm(path.join(target, "backup", "afk"), { recursive: true, force: true });
+      throw new Error("Injected transaction cleanup failure");
+    }
+    return originalRm(target, ...args);
+  };
+  let cleanupResult;
+  try {
+    cleanupResult = await applyCandidate(candidateThree, { homeDirectory: cleanupHome });
+  } finally {
+    fs.rm = originalRm;
+  }
+  assert.equal(cleanupInjected, true);
+  assert.equal(cleanupResult.status, "updated");
+  assert.match(cleanupResult.warning, /Injected transaction cleanup failure/);
+  const afterCleanupFailure = await catalogStatus({ homeDirectory: cleanupHome, checkRemote: false });
+  assert.equal(afterCleanupFailure.installedCommit, candidateThree.commit);
+  assert.equal(afterCleanupFailure.discoverable, true);
+  assert.equal(afterCleanupFailure.lastRun.success, true);
+  assert.equal(afterCleanupFailure.lastRun.warning, cleanupResult.warning);
 
   const invalidRoot = path.join(temporaryRoot, "invalid-candidate");
   await copyRepository(invalidRoot);
@@ -111,7 +204,7 @@ try {
   await assert.rejects(loadCandidate(invalidRoot, "test-invalid"), /missing YAML frontmatter/);
   assert.equal(await hashDirectory(managedSkillRoot), beforeFailureHash);
 
-  console.log("MANAGER_TEST_OK registration, add/modify/remove, validation rejection, and rollback passed.");
+  console.log("MANAGER_TEST_OK registration, add/modify/remove, validation rejection, rollback, recovery faults, and cleanup faults passed.");
 } finally {
   await fs.rm(temporaryRoot, { recursive: true, force: true });
 }

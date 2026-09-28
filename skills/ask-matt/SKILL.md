@@ -8,9 +8,9 @@ disable-model-invocation: true
 
 Start from the user's outcome and existing decisions. Skills are tools to resolve a specific need; there is no required idea-to-ship sequence. Repository instructions and explicit user choices take precedence.
 
-## Default: one task owns delivery
+## Start with the agreed work
 
-When the request is clear, implement it in the current task: inspect affected code, make the change, verify the relevant behavior, update changed facts, and commit under repository policy. `/implement` describes this delivery loop; `/code-review` owns review depth. Neither multiple tickets nor a long session automatically creates an orchestra. Continue in the current task while it can finish coherently; consult [PHASE-BOUNDARIES.md](PHASE-BOUNDARIES.md) only when deciding whether ownership or context should move.
+When the request is clear, proceed with implementation. `/implement` describes delivery and `/code-review` owns review depth. Choose the execution and collaboration approach to fit the work and environment. Consult [PHASE-BOUNDARIES.md](PHASE-BOUNDARIES.md) when deciding whether collaboration or a context transfer would help.
 
 ## Add a tool for an actual gap
 

@@ -1,6 +1,6 @@
 # Writing Agent Briefs
 
-An agent brief is a structured comment posted on a GitHub issue or PR when it moves to `ready-for-agent`. It is the authoritative specification that an AFK agent will work from. The original body and discussion are context — the agent brief is the contract.
+An agent brief is a structured handoff comment posted on a GitHub issue or PR when it moves to `ready-for-agent`. It points to the current requirements and approved decisions under the project's source-of-truth rules; it does not replace them. Before acting, read those sources and reconcile the brief against them. Surface unresolved conflicts instead of treating a stale brief as overriding the current issue body, spec, or user decision.
 
 The brief states **what the agent should do**, which stretches to both surfaces: for an issue, that's building the change from nothing; for a PR, it's what's left to do *to the existing diff* — finish it, close gaps, address review points. Same principles either way; the PR example below shows the difference.
 
@@ -12,8 +12,8 @@ The issue may sit in `ready-for-agent` for days or weeks. The codebase will chan
 
 - **Do** describe interfaces, types, and behavioral contracts
 - **Do** name specific types, function signatures, or config shapes that the agent should look for or modify
-- **Don't** reference file paths — they go stale
-- **Don't** reference line numbers
+- **Do** link the requirement sources and relevant sections, noting the revision or date consulted when useful
+- **Don't** rely on line numbers or old paths alone; verify that the referenced source is still current
 - **Don't** assume the current implementation structure will remain the same
 
 ### Behavioral, not procedural
@@ -44,6 +44,9 @@ State what is out of scope. This prevents the agent from gold-plating or making 
 **Category:** bug / enhancement
 **Summary:** one-line description of what needs to happen
 
+**Sources and agreed scope:**
+Links to the current issue body, spec, or approved decisions, following the project's source-of-truth rules. Note unresolved conflicts or limits on the authorized next action.
+
 **Current behavior:**
 Describe what happens now. For bugs, this is the broken behavior.
 For enhancements, this is the status quo the feature builds on.
@@ -70,6 +73,8 @@ Be specific about edge cases and error conditions.
 ## Examples
 
 ### Good agent brief (bug)
+
+In each example below, also include the actual source links from the template; the examples illustrate only the behavior-specific portion of the handoff.
 
 ```markdown
 ## Agent Brief
@@ -201,7 +206,7 @@ The function around line 150 has the issue.
 This is bad because:
 - No category
 - Vague description ("the triage thing is broken")
-- References file paths and line numbers that will go stale
+- Gives locations without current requirement sources or a behavioral contract
 - No acceptance criteria
 - No scope boundaries
 - No description of current vs desired behavior

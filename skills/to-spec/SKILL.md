@@ -12,11 +12,9 @@ The issue tracker and triage label vocabulary should have been provided to you â
 
 1. Explore the repo to understand the current state of the codebase, if you haven't already. Use the project's domain glossary vocabulary throughout the spec, and respect any ADRs in the area you're touching.
 
-2. Sketch out the seams at which you're going to test the feature. Existing seams should be preferred to new ones. Use the highest seam possible. If new seams are needed, propose them at the highest point you can. The fewer seams across the codebase, the better - the ideal number is one.
+2. Separate agreed decisions from proposals and unresolved questions. Preserve the confirmed scope and record material gaps in Further Notes; do not invent decisions to make the spec appear complete.
 
-Check with the user that these seams match their expectations.
-
-3. Write the spec using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
+3. Write the spec using the template below, then publish it to the project issue tracker under the user's request and project rules. Assess readiness separately: use `ready-for-agent` only when the next implementation work is sufficiently specified and already authorized. Otherwise use the project's appropriate pending role and state what decision, information, or authorization is missing. Reuse existing approvals; publication alone is not implementation approval.
 
 <spec-template>
 
@@ -58,11 +56,7 @@ Exception: if a prototype produced a snippet that encodes a decision more precis
 
 ## Testing Decisions
 
-A list of testing decisions that were made. Include:
-
-- A description of what makes a good test (only test external behavior, not implementation details)
-- Which modules will be tested
-- Prior art for the tests (i.e. similar types of tests in the codebase)
+Record any verification requirements already agreed, including acceptance criteria and known evidence gaps. Leave unspecified testing choices to the executor.
 
 ## Out of Scope
 

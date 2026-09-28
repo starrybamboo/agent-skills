@@ -21,7 +21,7 @@ node <this-skill-directory>/scripts/manage-shared-skills.mjs <command>
 - `update` checks Hub `main`, stays quiet apart from a concise no-change result when current, and reports added, modified, and removed skills when it applies an update.
 - `status` reports the installed commit, remote commit, ownership drift, last run, and whether an update is available.
 
-Stop on a nonzero exit. Report the error without replacing it with a broad `npx skills update -g`; the script has already preserved or restored the last usable installation.
+Stop on a nonzero exit and report the error. When recovery is incomplete, preserve the reported transaction files and surface the failed recovery steps and path; do not claim the previous installation was restored or retry with a broad `npx skills update -g`. Report cleanup warnings separately from installation failures.
 
 ## Scheduled update commands
 

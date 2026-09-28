@@ -28,7 +28,7 @@ Resolve a choice autonomously when it stays inside the approved behavior and sys
 4. Prefer reversible changes, existing mechanisms, fewer concepts, and lower regression risk.
 5. Use code evidence and targeted verification to break remaining ties.
 
-Record the decision and its reason, then keep working. Do not defer ordinary implementation choices such as exactness beyond the requirement, local refactor shape, cache settings, batching, test seams, tool selection, retrying a safe transient failure, or a recommended simple option versus a more elaborate general solution.
+Record the decision and its reason, then keep working. Do not defer ordinary implementation choices such as exactness beyond the requirement, local refactor shape, cache settings, batching, tool selection, retrying a safe transient failure, or a recommended simple option versus a more elaborate general solution.
 
 Do not turn AFK into task rescue. A suspended, idle, or archived task may stay exactly as it is when its remaining work is independent of the completion condition. Continue the available wrap-up without touching that task.
 

@@ -4,7 +4,7 @@ Public, project-independent agent skills curated by `starrybamboo`. The `main` b
 
 ## Development workflow
 
-Default to one owner delivering the scoped outcome, with verification and review proportional to risk. The [workflow router](skills/ask-matt/SKILL.md) selects optional tools, [implementation](skills/implement/SKILL.md) owns delivery, and [code review](skills/code-review/SKILL.md) uses one combined reviewer by default. These are locally maintained adaptations; repository and user instructions take precedence.
+Choose execution, collaboration, workspace isolation, and commit strategy to fit the work and environment, with timely verification and review proportional to risk. The [workflow router](skills/ask-matt/SKILL.md) selects useful tools, [implementation](skills/implement/SKILL.md) guides delivery, and [code review](skills/code-review/SKILL.md) owns review depth. These are locally maintained adaptations; repository and user instructions take precedence.
 
 ## Install
 
@@ -31,7 +31,7 @@ The default automatic check is 04:00 local time. Local Scheduled Tasks require t
 
 ## Update guarantees
 
-The manager updates only skills recorded as owned by `starrybamboo/agent-skills`. It clones `main` into a temporary directory, validates the complete candidate catalog, stages every changed directory, and rolls back the transaction if installation or metadata writes fail. Unrelated global and repository skills are left alone.
+The manager updates only skills recorded as owned by `starrybamboo/agent-skills`. It clones `main` into a temporary directory, validates the complete candidate catalog, stages every changed directory, and attempts rollback if installation or metadata writes fail. It reports a retained version only after verifying restoration. If recovery fails, it reports the failure and preserves remaining transaction files and previous metadata for repair. Cleanup failure after a successful installation is a warning, not a reason to roll back. Unrelated global and repository skills are left alone.
 
 An automatic run never edits this repository, commits, pushes, or merges upstream changes. It reports added, modified, and removed skills; a validation failure leaves the previous installation active.
 

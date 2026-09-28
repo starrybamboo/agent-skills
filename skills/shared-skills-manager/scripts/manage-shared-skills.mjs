@@ -317,9 +317,14 @@ export async function applyCandidate(candidate, {
 
   const previousStateText = await readTextOrNull(paths.statePath);
   const previousLockText = await readTextOrNull(paths.lockPath);
+  await writeJson(path.join(transactionRoot, "previous-metadata.json"), {
+    state: previousStateText,
+    lock: previousLockText,
+  });
   const movedOld = [];
   const installedNew = [];
   let metadataStarted = false;
+  let result;
 
   try {
     await fs.mkdir(paths.skillsRoot, { recursive: true });
@@ -357,37 +362,75 @@ export async function applyCandidate(candidate, {
     await writeJson(paths.lockPath, nextLock);
     await writeJson(paths.statePath, candidateState(candidate, releasePath));
 
-    const result = {
+    result = {
       status: "updated",
       previousCommit: state.installedCommit,
       commit: candidate.commit,
       ...changes,
     };
     await recordLastRun(paths, { success: true, ...result });
-    await fs.rm(transactionRoot, { recursive: true, force: true });
-    return result;
   } catch (error) {
+    const rollbackErrors = [];
+    const attemptRecovery = async (action, restore) => {
+      try {
+        await restore();
+      } catch (recoveryError) {
+        rollbackErrors.push(`${action}: ${recoveryError.message}`);
+      }
+    };
     for (const name of installedNew.reverse()) {
-      await fs.rm(path.join(paths.skillsRoot, name), { recursive: true, force: true }).catch(() => {});
+      await attemptRecovery(`Remove new ${name}`, () => fs.rm(path.join(paths.skillsRoot, name), { recursive: true, force: true }));
     }
     for (const name of movedOld.reverse()) {
       const backup = path.join(backupRoot, name);
       const target = path.join(paths.skillsRoot, name);
-      if (await exists(backup) && !(await exists(target))) await fs.rename(backup, target).catch(() => {});
+      await attemptRecovery(`Restore ${name}`, async () => {
+        if (await exists(target)) throw new Error(`Installation target is occupied: ${target}`);
+        await fs.rename(backup, target);
+      });
     }
     if (metadataStarted) {
-      await restoreText(paths.lockPath, previousLockText).catch(() => {});
-      await restoreText(paths.statePath, previousStateText).catch(() => {});
+      await attemptRecovery("Restore source lock", () => restoreText(paths.lockPath, previousLockText));
+      await attemptRecovery("Restore managed state", () => restoreText(paths.statePath, previousStateText));
     }
-    await recordLastRun(paths, {
+    await attemptRecovery("Verify restored installation", async () => {
+      const restoredDrift = await inspectManagedInstall(paths, state, await readLock(paths));
+      if (restoredDrift.length) throw new Error(restoredDrift.join("; "));
+      if (await readTextOrNull(paths.statePath) !== previousStateText
+        || await readTextOrNull(paths.lockPath) !== previousLockText) {
+        throw new Error("Metadata differs from the previous installation");
+      }
+    });
+    await attemptRecovery("Record update failure", () => recordLastRun(paths, {
       success: false,
-      status: "failed",
-      retainedCommit: state.installedCommit,
+      status: rollbackErrors.length ? "rollback-failed" : "failed",
+      previousCommit: state.installedCommit,
+      retainedCommit: rollbackErrors.length ? null : state.installedCommit,
       error: error.message,
-    }).catch(() => {});
-    await fs.rm(transactionRoot, { recursive: true, force: true }).catch(() => {});
+      ...(rollbackErrors.length ? { recoveryPath: transactionRoot, rollbackErrors } : {}),
+    }));
+    if (!rollbackErrors.length) {
+      await attemptRecovery("Clean up restored transaction", () => fs.rm(transactionRoot, { recursive: true, force: true }));
+    }
+    if (rollbackErrors.length) {
+      throw new Error(`${error.message}\nRecovery requires attention:\n- ${rollbackErrors.join("\n- ")}\nRemaining transaction files retained at ${transactionRoot}`, { cause: error });
+    }
     throw error;
   }
+
+  // Cleanup is outside the installation transaction: a partial backup deletion
+  // cannot safely be rolled back, and the verified new installation is usable.
+  try {
+    await fs.rm(transactionRoot, { recursive: true, force: true });
+  } catch (error) {
+    result.warning = `Update installed; transaction cleanup failed at ${transactionRoot}: ${error.message}`;
+    try {
+      await recordLastRun(paths, { success: true, ...result });
+    } catch (reportError) {
+      result.warning += `; could not record cleanup warning: ${reportError.message}`;
+    }
+  }
+  return result;
 }
 
 export async function catalogStatus({ homeDirectory = homedir(), checkRemote = true } = {}) {
@@ -441,6 +484,7 @@ function printResult(result) {
   console.log(`ADDED ${result.added.length ? result.added.join(", ") : "none"}`);
   console.log(`MODIFIED ${result.modified.length ? result.modified.join(", ") : "none"}`);
   console.log(`REMOVED ${result.removed.length ? result.removed.join(", ") : "none"}`);
+  if (result.warning) console.log(`WARNING ${result.warning}`);
 }
 
 async function main() {
