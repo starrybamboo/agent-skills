@@ -16,6 +16,12 @@
       "disableModelInvocation": true
     },
     {
+      "name": "capability-pruning",
+      "entrypoint": "skills/capability-pruning/SKILL.md",
+      "description": "Prune a codebase by capability — inventory every capability, give each an evidence card, and let the owner decide removals item by item. Use when simplifying or slimming a project, hunting for unused features or dead mechanisms, or before claiming that something is unused, never used, or safe to delete.",
+      "disableModelInvocation": false
+    },
+    {
       "name": "code-review",
       "entrypoint": "skills/code-review/SKILL.md",
       "description": "Review a branch, PR, or work-in-progress diff against a fixed base for correctness, requirements, and consequential coding standards. Use one combined reviewer by default and add reviewers only for distinct material risks.",
@@ -37,6 +43,12 @@
       "name": "domain-modeling",
       "entrypoint": "skills/domain-modeling/SKILL.md",
       "description": "Build and sharpen a project's domain model. Use when the user wants to pin down domain terminology or a ubiquitous language, record an architectural decision, or when another skill needs to maintain the domain model.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "e2e-first-testing",
+      "entrypoint": "skills/e2e-first-testing/SKILL.md",
+      "description": "Test strategy for a repository — which tests to write, keep, or delete. Use when adding tests for a change or a bug fix, designing fakes, mocks or test doubles, reviewing a diff that adds or edits tests, deciding whether a regression test is warranted, or pruning a slow or brittle test suite.",
       "disableModelInvocation": false
     },
     {
@@ -82,6 +94,18 @@
       "disableModelInvocation": true
     },
     {
+      "name": "llm-agent-surface",
+      "entrypoint": "skills/llm-agent-surface/SKILL.md",
+      "description": "Design rules for what an LLM sees inside an agent framework — tool schemas, rejection messages, prompts — and for where the framework stops and the model decides. Use when building or changing an LLM agent, adding a tool or a schema field, writing a rejection or validation message, fixing a wrong model decision, or adding validation, retries or guards around model output.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "minimal-design-gate",
+      "entrypoint": "skills/minimal-design-gate/SKILL.md",
+      "description": "A gate against over-design, applied before and after a change. Use when proposing a design or a fix, writing a brief for another agent, reviewing a diff or an agent's delivery, or when a change adds fields, options, abstractions, fallbacks, compatibility paths or dependencies.",
+      "disableModelInvocation": false
+    },
+    {
       "name": "prototype",
       "entrypoint": "skills/prototype/SKILL.md",
       "description": "Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic feels right, or explore what a UI should look like.",
@@ -91,6 +115,12 @@
       "name": "reduce-complexity",
       "entrypoint": "skills/reduce-complexity/SKILL.md",
       "description": "Reduce accidental complexity in ideas, plans, ADRs, and specifications before implementation. Use for a spec audit, subtraction audit, complexity budget, simpler architecture, or over-engineering review at the product and architecture surface; use simplify-code for implementation changes.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "repo-audit-loop",
+      "entrypoint": "skills/repo-audit-loop/SKILL.md",
+      "description": "Audit a whole repository, or a batch of finished work, until a round finds nothing — coverage ledger over every tracked file, orthogonal lenses, spec–code sync, every public entry actually run, and a defect ledger cleared as you go. Use when asked to audit, review or health-check a project, when closing out a batch of changes, before a release or handover, or when checking that specs and code still agree.",
       "disableModelInvocation": false
     },
     {
@@ -121,6 +151,18 @@
       "name": "simplify-code",
       "entrypoint": "skills/simplify-code/SKILL.md",
       "description": "Simplify existing implementation code, tests, modules, state, or operational machinery without changing approved behavior, architecture, or failure policy. Use when the user asks to simplify code, remove over-engineering, clean up a reviewed diff, or when an authorized implementation workflow reaches its final simplification pass.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "site-annotated-gates",
+      "entrypoint": "skills/site-annotated-gates/SKILL.md",
+      "description": "Enforce architectural and code-shape rules with static gates whose exceptions are annotated at the code site. Use when adding a lint or CI check for an architectural constraint, when a test is about to lock code structure, when an allowlist or exemption list keeps growing, or when a rule needs justified exceptions.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "structural-fix",
+      "entrypoint": "skills/structural-fix/SKILL.md",
+      "description": "How to fix a defect so its whole class disappears, not just the reported instance. Use when fixing a bug, writing a fix brief for another agent, reviewing someone's fix, or when a fix is tempting to write as a guard, special case, retry cap or fallback.",
       "disableModelInvocation": false
     },
     {
