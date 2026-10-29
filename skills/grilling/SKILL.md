@@ -11,7 +11,7 @@ The design root and grouped questioning are consecutive stages, not alternative 
 
 Keep a **complexity budget** on the tree. Whenever a branch introduces durable state, another lifecycle, retry or compensation machinery, a cache, background work, a new abstraction, or handling for a highly unlikely scenario, add a frontier node that tests what concrete outcome earns it and whether a constraint, clear failure, or safe user retry produces a simpler design. Prefer the simple branch when it preserves safety and recoverability; do not call a design simpler when it merely moves complexity to callers or operations.
 
-Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled — the nodes you can resolve _now_ without guessing at answers you haven't heard yet. A round is atomic: process every node on the current frontier before yielding to the user. The design-root confirmation is the only intentionally single-question round. After it, yield with one material question only when the frontier itself contains one node. Keep independent frontier nodes as separate numbered blocks in the same response; couple nodes only when one end-to-end choice must settle them together.
+Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled: the nodes you can resolve _now_ without guessing at answers you haven't heard yet. A round is atomic: process every node on the current frontier before yielding to the user. The design-root confirmation is the only intentionally single-question round. After it, yield with one material question only when the frontier itself contains one node. Keep independent frontier nodes as separate numbered blocks in the same response; couple nodes only when one end-to-end choice must settle them together.
 
 Before drafting each post-root round, run a **frontier audit** across the whole known tree:
 
@@ -38,14 +38,16 @@ Number every **Compare** or **Ask** decision in one sequence and separate consec
 
 ---
 
-❓ **Q2** - **<question title>**: <question body>
+❓ **Q2** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
 
 ➡️ <your recommended answer>
 ```
 
-After every node on the current frontier has been asked, decided, or delegated, yield once and wait for the user's answers. Each round the user answers reshapes the tree — settled decisions push the frontier outward and unblock questions that depended on them. Recompute the frontier and process the next round. A question whose answer depends on another question still open in this round belongs to a _later_ round, not this one.
+Word each Ask question so "yes" accepts your recommended answer.
 
-Finding _facts_ is your job, never the user's. When a frontier node needs a fact from the environment (filesystem, tools, etc.), dispatch a sub-agent to find it — don't ask the user for anything you could look up yourself. Don't block on it: a running exploration is an unsettled prerequisite, so only the nodes downstream of it wait for the sub-agent to report — process the rest of the frontier now. Material decisions are the user's; ordinary implementation decisions are yours to make and expose.
+After every node on the current frontier has been asked, decided, or delegated, yield once and wait for the user's answers. Each round the user answers reshapes the tree: settled decisions push the frontier outward and unblock questions that depended on them. Recompute the frontier and process the next round. A question whose answer depends on another question still open in this round belongs to a _later_ round, not this one.
+
+Finding _facts_ is your job, never the user's. When a frontier node needs a fact from the environment (filesystem, tools, etc.), dispatch a sub-agent with a fresh context window to find it; don't ask the user for anything you could look up yourself. Don't block on it: a running exploration is an unsettled prerequisite, so only the nodes downstream of it wait for the sub-agent to report; process the rest of the frontier now. Material decisions are the user's; ordinary implementation decisions are yours to make and expose.
 
 Protect the main conversation's context. Use sub-agents for bounded work that can return without user interaction, and `/research` only when the user has authorised a durable cited artifact. When a branch needs an interactive or iterative prototype, a separate harness, or sustained user feedback, actively move it to a fresh task instead of building it inline: use an available user-authorised task-creation mechanism, or ask the user to invoke `/handoff`. Seed that task from the confirmed design root and the single question to answer, following the handoff's compact, source-pointer-based contract. Return only the artifact or source pointers, the observations, and the verdict to the main tree.
 

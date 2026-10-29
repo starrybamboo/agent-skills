@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 Implement the agreed outcome from the user's request, spec, or tickets. Read the affected code and current requirements, and follow existing decisions and repository instructions.
 
+If the user passes a ticket reference, fetch it from the issue tracker and state its title before starting. If the reference is ambiguous, ask.
+
 Choose how to execute, collaborate, isolate changes, and organize commits based on the work, dependencies, concurrent activity, and available tools. Preserve existing work and coordinate operations on shared state.
 
 Get feedback early and throughout implementation with focused tests, typechecking, or builds. Use [tdd](../tdd/SKILL.md) when requested or useful; for defects, prefer a regression case that fails before the fix. Match validation to the affected behavior, demonstrated risk, and required repository or release checks.

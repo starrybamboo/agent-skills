@@ -24,7 +24,7 @@ Write a standalone Markdown capsule containing:
 
 Reference existing artifacts by path or URL instead of copying them. Remove repeated discussion, superseded options, dead ends, raw tool output, and implementation detail recoverable from the referenced sources. Redact secrets and unnecessary personal information. If the user passed arguments, use them to prioritize what the successor needs.
 
-Save the capsule in the operating system's temporary directory, outside the workspace.
+Save the capsule to the temporary directory of the user's OS (`$TMPDIR`, else `/tmp`; `%TEMP%` on Windows), not the current workspace, and report the saved path.
 
 ## Deliver the capsule
 

@@ -19,7 +19,7 @@ Resolve the supplied base and its merge-base with the candidate. For implementat
 
 Capture candidate commit and worktree status, relevant committed/staged/unstaged diff, and in-scope untracked files. Read untracked files as added content. Keep unrelated dirty work outside the review; flag overlapping hunks whose provenance is unclear. A bad ref is an error. An empty surface means no changes to review, not evidence of correctness.
 
-Use the explicit task or current issue/spec as the requirement source. Read project instructions for the affected paths. Consult linked history only for a specific unresolved decision. If a requirement source is missing, review what can be established and identify the uncertainty. Read tracker rules before tracker access when the repository provides them; do not run setup as part of a review.
+Use the explicit task or current issue/spec as the requirement source. Read project instructions for the affected paths, and search the repository for files that document how code should be written; `CODING_STANDARDS.md` or `CONTRIBUTING.md` belongs on that list when present. Consult linked history only for a specific unresolved decision. If a requirement source is missing, review what can be established and identify the uncertainty. Read tracker rules before tracker access when the repository provides them; do not run setup as part of a review.
 
 ## Review the actual risks
 

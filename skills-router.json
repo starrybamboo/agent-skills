@@ -42,7 +42,7 @@
     {
       "name": "domain-modeling",
       "entrypoint": "skills/domain-modeling/SKILL.md",
-      "description": "Build and sharpen a project's domain model. Use when the user wants to pin down domain terminology or a ubiquitous language, record an architectural decision, or when another skill needs to maintain the domain model.",
+      "description": "Build and sharpen a project's domain model. Use when discussing codebase terminology, writing or editing a GLOSSARY.md, or recording or editing an ADR.",
       "disableModelInvocation": false
     },
     {
@@ -88,6 +88,12 @@
       "disableModelInvocation": true
     },
     {
+      "name": "implement-spec",
+      "entrypoint": "skills/implement-spec/SKILL.md",
+      "description": "Implement the result of /to-spec and /to-tickets in code.",
+      "disableModelInvocation": true
+    },
+    {
       "name": "improve-codebase-architecture",
       "entrypoint": "skills/improve-codebase-architecture/SKILL.md",
       "description": "Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.",
@@ -103,6 +109,12 @@
       "name": "minimal-design-gate",
       "entrypoint": "skills/minimal-design-gate/SKILL.md",
       "description": "A gate against over-design, applied before and after a change. Use when proposing a design or a fix, writing a brief for another agent, reviewing a diff or an agent's delivery, or when a change adds fields, options, abstractions, fallbacks, compatibility paths or dependencies.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "pr",
+      "entrypoint": "skills/pr/SKILL.md",
+      "description": "Use when writing a PR body.",
       "disableModelInvocation": false
     },
     {
@@ -130,15 +142,15 @@
       "disableModelInvocation": false
     },
     {
-      "name": "resolving-merge-conflicts",
-      "entrypoint": "skills/resolving-merge-conflicts/SKILL.md",
-      "description": "Use when you need to resolve an in-progress git merge/rebase conflict.",
-      "disableModelInvocation": false
+      "name": "retro",
+      "entrypoint": "skills/retro/SKILL.md",
+      "description": "Conduct a retrospective on a coding session.",
+      "disableModelInvocation": true
     },
     {
       "name": "setup-matt-pocock-skills",
       "entrypoint": "skills/setup-matt-pocock-skills/SKILL.md",
-      "description": "Configure this repo for the engineering skills — set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.",
+      "description": "Configure this repo for the engineering skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.",
       "disableModelInvocation": true
     },
     {
@@ -186,19 +198,19 @@
     {
       "name": "to-spec",
       "entrypoint": "skills/to-spec/SKILL.md",
-      "description": "Turn the current conversation into a spec and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed.",
+      "description": "Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you've already discussed.",
       "disableModelInvocation": true
     },
     {
       "name": "to-tickets",
       "entrypoint": "skills/to-tickets/SKILL.md",
-      "description": "Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker — edges as text in one file per ticket locally, or native blocking links on a real tracker.",
+      "description": "Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).",
       "disableModelInvocation": true
     },
     {
       "name": "triage",
       "entrypoint": "skills/triage/SKILL.md",
-      "description": "Move issues and external PRs through a state machine of triage roles — categorise, verify, grill if needed, and write agent-ready briefs.",
+      "description": "Move issues and external PRs through a state machine of triage roles, categorise, verify, grill if needed, and write agent-ready briefs.",
       "disableModelInvocation": true
     },
     {
@@ -210,13 +222,13 @@
     {
       "name": "wait-what",
       "entrypoint": "skills/wait-what/SKILL.md",
-      "description": "Stop. That last message did not land — re-pitch it.",
+      "description": "Stop. That last message did not land: re-pitch it.",
       "disableModelInvocation": true
     },
     {
       "name": "wayfinder",
       "entrypoint": "skills/wayfinder/SKILL.md",
-      "description": "Plan a huge chunk of work — more than one agent session can hold — as a shared map of decision tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.",
+      "description": "Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.",
       "disableModelInvocation": true
     },
     {

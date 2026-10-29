@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 Start from the user's outcome and existing decisions. Skills are tools to resolve a specific need; there is no required idea-to-ship sequence. Repository instructions and explicit user choices take precedence.
 
+Before stating what a skill does or recommending a step be skipped, read that skill's SKILL.md: the summaries here are for orientation only.
+
 ## Start with the agreed work
 
 When the request is clear, proceed with implementation. `/implement` describes delivery and `/code-review` owns review depth. Choose the execution and collaboration approach to fit the work and environment. Consult [PHASE-BOUNDARIES.md](PHASE-BOUNDARIES.md) when deciding whether collaboration or a context transfer would help.
@@ -20,17 +22,20 @@ When the request is clear, proceed with implementation. `/implement` describes d
 | A broad effort has unknown dependencies or decisions | `/wayfinder`; reuse its decisions rather than reopening them. |
 | An existing discussion needs a durable implementation contract | `/to-spec`; update the existing spec when sufficient. |
 | Work has independently deliverable outcomes or different owners | `/to-tickets`; avoid splitting just to create a pipeline. |
+| A spec's tickets are ready and running them as a task graph beats driving each one | `/implement-spec`; a fresh implementer per ready ticket, landing on one integration branch. |
 | A runnable experiment would settle a design question | `/prototype`; keep the question and return evidence in the current task unless a separate task is needed and authorized. |
 | Incoming reports need readiness assessment | `/triage`; approved tickets need reassessment only when their facts change. |
 | A stubborn or intermittent defect needs diagnosis | `/diagnosing-bugs`; straightforward defects use a focused reproduction and fix. |
 | A concrete behavior benefits from test-first development | `/tdd`. |
 | A fixed diff needs review | `/code-review`; combine requirements and standards in one review by default. |
+| Work goes up as a pull request | `/pr` shapes the body: the smallest visual, before/after evidence, and a one-way or two-way door call. |
+| A build or bug fix exposed a gap in the working environment | `/retro`; suggest navigation pointers, automated checks, coding standards, steering files, or tooling, not code changes. |
 | Existing code has a specific complexity problem | `/simplify-code`; use `/reduce-complexity` for plans before implementation. |
 | Module boundaries or domain language need work | `/codebase-design` or `/domain-modeling`; `/improve-codebase-architecture` for an explicitly requested broader survey. |
 | A factual unknown needs primary-source investigation | `/research`. |
 | Progress requires another person's knowledge or action | `/to-questionnaire` or `/wizard`, respectively. |
 | Ownership genuinely needs to move | `/handoff`; provide decisions, pointers, exact state, and next action. |
 
-`/grilling` is the interview primitive, `/wait-what` clarifies an explanation, `/teach` supports learning, `/resolving-merge-conflicts` handles an active conflict, and `/writing-for-agents` guides agent-facing documents. Use them for those needs rather than as delivery gates.
+`/grilling` is the interview primitive, `/wait-what` clarifies an explanation, `/teach` supports learning, and `/writing-for-agents` guides agent-facing documents. Use them for those needs rather than as delivery gates.
 
 If an explicitly selected workflow needs missing tracker or document setup, use `/setup-matt-pocock-skills`. Existing usable repository conventions satisfy that prerequisite; ordinary implementation does not require setup.

@@ -17,7 +17,7 @@
     },
     "mattpocock": {
       "repository": "mattpocock/skills",
-      "revision": "bb8fdc3fd12ce9729bb61f0885f51a420c3275ac",
+      "revision": "a496f5513d4a4cf889bc48e189e579f4b0bdf6aa",
       "license": "MIT",
       "licenseFile": "licenses/mattpocock-skills-MIT.txt"
     }
@@ -37,14 +37,16 @@
     { "name": "grilling", "path": "skills/grilling", "origin": "mattpocock" },
     { "name": "handoff", "path": "skills/handoff", "origin": "mattpocock" },
     { "name": "implement", "path": "skills/implement", "origin": "mattpocock" },
+    { "name": "implement-spec", "path": "skills/implement-spec", "origin": "mattpocock" },
     { "name": "improve-codebase-architecture", "path": "skills/improve-codebase-architecture", "origin": "mattpocock" },
     { "name": "llm-agent-surface", "path": "skills/llm-agent-surface", "origin": "hikarilan" },
     { "name": "minimal-design-gate", "path": "skills/minimal-design-gate", "origin": "hikarilan" },
+    { "name": "pr", "path": "skills/pr", "origin": "mattpocock" },
     { "name": "prototype", "path": "skills/prototype", "origin": "mattpocock" },
     { "name": "reduce-complexity", "path": "skills/reduce-complexity", "origin": "original" },
     { "name": "repo-audit-loop", "path": "skills/repo-audit-loop", "origin": "hikarilan" },
     { "name": "research", "path": "skills/research", "origin": "mattpocock" },
-    { "name": "resolving-merge-conflicts", "path": "skills/resolving-merge-conflicts", "origin": "mattpocock" },
+    { "name": "retro", "path": "skills/retro", "origin": "mattpocock" },
     { "name": "setup-matt-pocock-skills", "path": "skills/setup-matt-pocock-skills", "origin": "mattpocock" },
     { "name": "shared-skills-manager", "path": "skills/shared-skills-manager", "origin": "original" },
     { "name": "simplify-code", "path": "skills/simplify-code", "origin": "original" },
