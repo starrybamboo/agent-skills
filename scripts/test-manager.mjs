@@ -76,8 +76,16 @@ async function mutateCandidate(destination) {
 try {
   const initial = await loadCandidate(repositoryRoot, "test-v1");
   await seedNpxInstall(initial);
+  const claudeSkillsRoot = path.join(homeDirectory, ".claude", "skills");
+  const linkTarget = async (name) => path.resolve(claudeSkillsRoot, await fs.readlink(path.join(claudeSkillsRoot, name)));
+  await fs.mkdir(path.join(claudeSkillsRoot, "afk"), { recursive: true });
+  await fs.writeFile(path.join(claudeSkillsRoot, "afk", "SKILL.md"), "unmanaged Claude Code skill\n");
   const registered = await registerInstalledCatalog(initial, { homeDirectory });
   assert.equal(registered.status, "registered");
+  assert.match(registered.warning, /afk: .* is not managed by/);
+  assert.equal(await fs.readFile(path.join(claudeSkillsRoot, "afk", "SKILL.md"), "utf8"), "unmanaged Claude Code skill\n");
+  assert.equal(await linkTarget("wait-what"), path.join(homeDirectory, ".agents", "skills", "wait-what"));
+  await fs.rm(path.join(claudeSkillsRoot, "afk"), { recursive: true });
 
   const candidateTwoRoot = path.join(temporaryRoot, "candidate-two");
   await mutateCandidate(candidateTwoRoot);
@@ -88,6 +96,12 @@ try {
   assert.deepEqual(updated.removed, ["wait-what"]);
   assert.equal(await fs.access(path.join(homeDirectory, ".agents", "skills", "test-new-skill", "SKILL.md")).then(() => true), true);
   assert.equal(await fs.access(path.join(homeDirectory, ".agents", "skills", "wait-what")).then(() => true).catch(() => false), false);
+  assert.equal(await linkTarget("test-new-skill"), path.join(homeDirectory, ".agents", "skills", "test-new-skill"));
+  assert.equal(await linkTarget("afk"), path.join(homeDirectory, ".agents", "skills", "afk"));
+  assert.equal(await fs.lstat(path.join(claudeSkillsRoot, "wait-what")).then(() => true).catch(() => false), false);
+  assert.equal(await fs.readFile(path.join(claudeSkillsRoot, "afk", "SKILL.md"), "utf8").then((text) => text.includes("transactional update fixture")), true);
+  const linkedStatus = await catalogStatus({ homeDirectory, checkRemote: false });
+  assert.deepEqual(linkedStatus.claudeLinks, { linked: candidateTwo.skills.length, expected: candidateTwo.skills.length, missing: [] });
 
   const beforeFailure = await catalogStatus({ homeDirectory, checkRemote: false });
   const managedSkillRoot = path.join(homeDirectory, ".agents", "skills", "afk");

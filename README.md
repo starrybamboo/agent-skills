@@ -27,6 +27,8 @@ $shared-skills-manager update
 $shared-skills-manager status
 ```
 
+When Claude Code is installed (`~/.claude` exists), setup and every update also link each managed skill into `~/.claude/skills`, so Claude Code and Codex read the same installed files. An entry there that the manager did not create is left unchanged and reported. A managed skill named like a Claude Code built-in (`code-review`) replaces that built-in in Claude Code.
+
 The default automatic check is 04:00 local time. Local Scheduled Tasks require the computer to be on, the ChatGPT desktop app to be running, and network access.
 
 ## Update guarantees

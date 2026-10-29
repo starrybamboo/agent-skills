@@ -19,7 +19,9 @@ node <this-skill-directory>/scripts/manage-shared-skills.mjs <command>
 
 - `setup` verifies the installation created by `npx skills`, records exact ownership, and applies a newer validated `main` if one is already available.
 - `update` checks Hub `main`, stays quiet apart from a concise no-change result when current, and reports added, modified, and removed skills when it applies an update.
-- `status` reports the installed commit, remote commit, ownership drift, last run, and whether an update is available.
+- `status` reports the installed commit, remote commit, ownership drift, last run, whether an update is available, and how many managed skills are linked for Claude Code.
+
+When `~/.claude` exists, `setup` and `update` link every managed skill into `~/.claude/skills` and remove links for skills the Hub dropped, so Claude Code and Codex share one installation. Entries there that the manager did not create stay untouched and are reported as warnings.
 
 Stop on a nonzero exit and report the error. When recovery is incomplete, preserve the reported transaction files and surface the failed recovery steps and path; do not claim the previous installation was restored or retry with a broad `npx skills update -g`. Report cleanup warnings separately from installation failures.
 

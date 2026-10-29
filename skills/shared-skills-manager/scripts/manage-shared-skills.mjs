@@ -38,6 +38,8 @@ function resolvePaths(homeDirectory = homedir()) {
     home,
     agentsRoot,
     skillsRoot: path.join(agentsRoot, "skills"),
+    claudeRoot: path.join(home, ".claude"),
+    claudeSkillsRoot: path.join(home, ".claude", "skills"),
     managerRoot,
     releasesRoot: path.join(managerRoot, "releases"),
     transactionsRoot: path.join(managerRoot, "transactions"),
@@ -218,6 +220,67 @@ async function inspectManagedInstall(paths, state, lock) {
   return drift;
 }
 
+async function isLinkTo(link, target) {
+  try {
+    if (!(await fs.lstat(link)).isSymbolicLink()) return false;
+    return path.resolve(path.dirname(link), await fs.readlink(link)) === path.resolve(target);
+  } catch {
+    return false;
+  }
+}
+
+async function occupied(target) {
+  try {
+    await fs.lstat(target);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Claude Code loads personal skills from ~/.claude/skills. Link every managed
+// skill there so Claude Code and Codex read the same installed files. Entries
+// the manager did not create are left alone and reported.
+async function syncClaudeLinks(paths, names, removed = []) {
+  if (!(await exists(paths.claudeRoot))) return [];
+  const warnings = [];
+  await fs.mkdir(paths.claudeSkillsRoot, { recursive: true });
+  for (const name of removed) {
+    const link = path.join(paths.claudeSkillsRoot, safeName(name));
+    if (await isLinkTo(link, path.join(paths.skillsRoot, name))) await fs.unlink(link);
+  }
+  for (const name of names) {
+    const link = path.join(paths.claudeSkillsRoot, safeName(name));
+    const target = path.join(paths.skillsRoot, name);
+    if (await isLinkTo(link, target)) continue;
+    if (await occupied(link)) {
+      warnings.push(`${name}: ${link} is not managed by ${HUB_REPOSITORY}; left unchanged`);
+      continue;
+    }
+    await fs.symlink(target, link, "dir");
+  }
+  return warnings;
+}
+
+async function withClaudeLinks(paths, result, names, removed = []) {
+  let warnings;
+  try {
+    warnings = await syncClaudeLinks(paths, names, removed);
+  } catch (error) {
+    warnings = [`Claude Code links were not updated: ${error.message}`];
+  }
+  if (warnings.length) {
+    const message = `Claude Code: ${warnings.join("; ")}`;
+    result.warning = result.warning ? `${result.warning}; ${message}` : message;
+    try {
+      await recordLastRun(paths, { success: true, ...result });
+    } catch (reportError) {
+      result.warning += `; could not record warning: ${reportError.message}`;
+    }
+  }
+  return result;
+}
+
 async function recordLastRun(paths, value) {
   await writeJson(paths.lastRunPath, { at: new Date().toISOString(), ...value });
 }
@@ -247,7 +310,7 @@ export async function registerInstalledCatalog(candidate, { homeDirectory = home
   await writeJson(paths.statePath, state);
   const result = { status: "registered", commit: candidate.commit, added: [], modified: [], removed: [] };
   await recordLastRun(paths, { success: true, ...result });
-  return result;
+  return withClaudeLinks(paths, result, Object.keys(state.skills));
 }
 
 function compareState(state, candidate) {
@@ -293,7 +356,7 @@ export async function applyCandidate(candidate, {
   if (state.installedCommit === candidate.commit) {
     const result = { status: "no-changes", commit: candidate.commit, added: [], modified: [], removed: [] };
     await recordLastRun(paths, { success: true, ...result });
-    return result;
+    return withClaudeLinks(paths, result, Object.keys(state.skills));
   }
 
   const changes = compareState(state, candidate);
@@ -430,7 +493,7 @@ export async function applyCandidate(candidate, {
       result.warning += `; could not record cleanup warning: ${reportError.message}`;
     }
   }
-  return result;
+  return withClaudeLinks(paths, result, candidate.skills.map((skill) => skill.name), changes.removed);
 }
 
 export async function catalogStatus({ homeDirectory = homedir(), checkRemote = true } = {}) {
@@ -439,6 +502,15 @@ export async function catalogStatus({ homeDirectory = homedir(), checkRemote = t
   const lastRun = await readJson(paths.lastRunPath, null);
   const lock = await readLock(paths);
   const drift = state ? await inspectManagedInstall(paths, state, lock) : ["managed setup has not been completed"];
+  let claudeLinks = null;
+  if (state && await exists(paths.claudeRoot)) {
+    const names = Object.keys(state.skills || {});
+    const missing = [];
+    for (const name of names) {
+      if (!(await isLinkTo(path.join(paths.claudeSkillsRoot, name), path.join(paths.skillsRoot, name)))) missing.push(name);
+    }
+    claudeLinks = { linked: names.length - missing.length, expected: names.length, missing };
+  }
   let remoteCommit = null;
   let remoteError = null;
   if (checkRemote) {
@@ -457,6 +529,7 @@ export async function catalogStatus({ homeDirectory = homedir(), checkRemote = t
     managedSkillCount: state ? Object.keys(state.skills || {}).length : 0,
     discoverable: drift.length === 0,
     drift,
+    claudeLinks,
     lastRun,
     remoteError,
   };
@@ -472,12 +545,9 @@ async function runRemoteCommand(command) {
 }
 
 function printResult(result) {
-  if (result.status === "no-changes") {
-    console.log(`NO_CHANGES ${result.commit}`);
-    return;
-  }
-  if (result.status === "registered") {
-    console.log(`REGISTERED ${result.commit}`);
+  if (result.status === "no-changes" || result.status === "registered") {
+    console.log(`${result.status === "registered" ? "REGISTERED" : "NO_CHANGES"} ${result.commit}`);
+    if (result.warning) console.log(`WARNING ${result.warning}`);
     return;
   }
   console.log(`UPDATED ${result.previousCommit} -> ${result.commit}`);
@@ -504,6 +574,10 @@ async function main() {
       console.log(`MANAGED_SKILLS ${result.managedSkillCount}`);
       console.log(`DISCOVERABLE ${result.discoverable ? "yes" : "no"}`);
       if (result.drift.length) console.log(`DRIFT ${result.drift.join("; ")}`);
+      if (result.claudeLinks) {
+        console.log(`CLAUDE_LINKED ${result.claudeLinks.linked}/${result.claudeLinks.expected}`);
+        if (result.claudeLinks.missing.length) console.log(`CLAUDE_UNLINKED ${result.claudeLinks.missing.join(", ")}`);
+      }
       if (result.remoteError) console.log(`REMOTE_ERROR ${result.remoteError}`);
     }
     return;
