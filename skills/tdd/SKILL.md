@@ -5,7 +5,7 @@ description: Test-driven development. Use when the user wants to build features 
 
 # Test-Driven Development
 
-TDD is the red → green loop. This skill is the reference that makes that loop produce tests worth keeping: what a good test is, the anti-patterns, and the rules of the loop. Load the guidance needed for the current behavior; keep each cycle focused on a useful failing test and its implementation.
+TDD is the red → green loop. This skill is the reference that makes that loop produce tests worth keeping: what a good test is, where tests go, the anti-patterns, and the rules of the loop. Load the guidance needed for the current behavior; keep each cycle focused on a useful failing test and its implementation.
 
 When exploring the codebase, read `GLOSSARY.md` (if it exists) so test names and interface vocabulary match the project's domain language, and respect ADRs in the area you're touching.
 
@@ -14,6 +14,14 @@ When exploring the codebase, read `GLOSSARY.md` (if it exists) so test names and
 Tests verify required behavior and concrete failure risks. A good test reads like a specification: "user can checkout with valid cart" tells you exactly what capability exists. Choose the test approach that demonstrates the behavior reliably, without coupling assertions to irrelevant implementation details.
 
 See [tests.md](tests.md) for examples and [mocking.md](mocking.md) for mocking guidelines.
+
+## Seams: where tests go
+
+A **seam** is the public boundary you test at: the interface where you observe behavior without reaching inside. Tests live at seams, not against internals.
+
+Choose the seams before writing the first test. Prefer existing seams, and the highest seam that still reaches the behavior; you can't test everything, so put the effort on critical paths and complex logic rather than every edge case. Give each chosen seam a one-line note on what it catches and what it misses, and carry those notes into the delivery report. The choice is yours to make: ask only when it changes user-visible behavior or acceptance.
+
+When the shape of that interface is itself in question (how deep the module is, where the seam belongs, what the interface should expose), use [codebase-design](../codebase-design/SKILL.md) for the vocabulary. It is a reference to consult, not a session to run.
 
 ## Anti-patterns
 

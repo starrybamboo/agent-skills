@@ -113,9 +113,11 @@ Tool preference:
 
 ## Phase 5: Fix + regression test
 
-Choose a regression check that exercises the **real bug pattern**, including the interacting callers or sequence when they cause the failure. If an automated test is impractical, use the available reproduction check and report the remaining evidence gap.
+Write the regression test at a **correct seam**: one that exercises the **real bug pattern** (including the interacting callers or sequence when they cause the failure) through a public interface, so the test survives the next refactor.
 
-For an automated regression test:
+**If no correct seam exists, that itself is the finding.** Don't force a test that couples to the implementation. Verify the fix with the available reproduction check, report the remaining evidence gap, and carry the missing seam into the post-fix question below. The same applies when an automated test is impractical for another reason.
+
+If a correct seam exists:
 
 1. Turn the minimised repro into a failing test before the fix.
 2. Watch it fail. If you forced the red by mutating code or a fixture, `diff` against a pristine copy to prove the mutation landed before you trust it.

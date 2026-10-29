@@ -51,7 +51,12 @@ Each smell reads *what it is* → *how to fix*; match it against the diff:
 
 ## Report and stop
 
-Return one deduplicated list ordered by consequence. Each actionable finding includes severity, file/line or precise surface, trigger, impact, and contract or reproducible evidence. Separate required fixes from optional suggestions. State the reviewed base/candidate, validation used, and meaningful evidence gaps. Report no findings when that is the result; tests passing alone do not prove the entire contract.
+Report two axes under separate headings, because a change can pass one and fail the other, and one merged list lets a strong axis mask a weak one:
+
+- **Requirements**: does the change do what the task, issue, or spec asked? Missing or partial requirements, scope creep, and behavior that looks implemented but is wrong. Quote the requirement for each finding.
+- **Standards**: does the change follow documented standards and the smell baseline, and avoid unnecessary mechanisms and misleading contracts?
+
+Deduplicate and order by consequence within each axis; don't merge or rerank across them. Give each axis its own one-line verdict and worst finding. When no requirement source exists, say so under Requirements instead of skipping the heading. Each actionable finding includes severity, file/line or precise surface, trigger, impact, and contract or reproducible evidence. Separate required fixes from optional suggestions. State the reviewed base/candidate, validation used, and meaningful evidence gaps. Report no findings when that is the result; tests passing alone do not prove the entire contract.
 
 After a fix, inspect the delta, original failure case, and affected neighbors. Broaden only for new evidence of risk. A second full review is not the default.
 

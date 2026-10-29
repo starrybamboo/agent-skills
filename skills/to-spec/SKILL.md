@@ -56,7 +56,9 @@ Exception: if a prototype produced a snippet that encodes a decision more precis
 
 ## Testing Decisions
 
-Record any verification requirements already agreed, including acceptance criteria and known evidence gaps. Leave unspecified testing choices to the executor.
+Record any verification requirements already agreed, including acceptance criteria and known evidence gaps.
+
+Then sketch the seams at which the feature will be tested, with a one-line note on what each catches and misses. Prefer existing seams, and the highest seam that still reaches the behavior; the fewer seams across the codebase, the better. Mark the sketch as a proposal: the executor may revise it with a stated reason, and it needs no separate approval.
 
 ## Out of Scope
 
