@@ -5,6 +5,7 @@ A collection of upstream agent tools maintained by `starrybamboo`. Start with ps
 ## What ships
 
 - `plugins/pstack/` is an unchanged copy of `cursor/plugins/harness/pstack/claude-code`, including skills, agents, documentation, scripts, assets, plugin metadata, and license.
+- `plugins/cursor-team-kit/upstream/` preserves the Cursor Team Kit source unchanged. A generated Claude Code manifest exposes the three pstack dependencies (`deslop`, `control-cli`, `control-ui`) and their companion `verify-this`. Other kit workflows, agents, and Cursor rules are not activated.
 - `upstreams.json` selects the source repository, tracking branch, source directory, and destination.
 - `upstreams.lock.json` records the exact upstream commit, plugin version, and every file's hash and executable flag.
 - `skills-manifest.json` and `skills-router.json` are generated discovery indexes, not a flat global-skill installation manifest.
@@ -18,6 +19,7 @@ Install this collection as a marketplace:
 ```text
 /plugin marketplace add starrybamboo/agent-skills
 /plugin install pstack@starrybamboo-skills
+/plugin install cursor-team-kit@starrybamboo-skills
 ```
 
 Then configure roles and start a task:
@@ -28,6 +30,8 @@ Then configure roles and start a task:
 ```
 
 Do not install another copy of pstack from `cursor-plugins` at the same time. The upstream [Claude Code adapter](plugins/pstack/docs/harness/claude-code.md) defines the supported mappings and limitations. Installation does not make poteto-mode permanent in every chat. This repository does not change your global instructions or model settings.
+
+If this marketplace is already installed, run `/plugin marketplace update starrybamboo-skills` before installing the companion plugin. Its commands are `/cursor-team-kit:deslop`, `/cursor-team-kit:control-cli`, `/cursor-team-kit:control-ui`, and `/cursor-team-kit:verify-this`. See [dependency coverage](docs/pstack-dependencies.md) for what can and cannot be installed this way.
 
 ## Codex and existing installations
 
@@ -41,7 +45,7 @@ Updating this repository does **not** uninstall files or links already present o
 
 GitHub Actions checks upstream daily at **02:17 UTC (10:17 UTC+8)**, and can also be run with **Run workflow**. Scheduled runs can be delayed by GitHub; inactive public repositories may have schedules disabled.
 
-When content changes, the job copies the complete upstream distribution, regenerates the lock and indexes, runs this repository's tests, and opens or updates one **draft** PR on `sync/pstack`. It does not force-push, auto-merge, deploy, or install anything on your computers. A failed check stops publication. A no-change run creates no commit or PR.
+When content changes, the job copies the upstream distributions, regenerates the reviewed adapter metadata, lock and indexes, runs this repository's tests, and opens or updates one **draft** PR on `sync/pstack`. It does not force-push, auto-merge, deploy, or install anything on your computers. A failed check stops publication. A no-change run creates no commit or PR.
 
 The workflow uses GitHub's temporary `GITHUB_TOKEN`, not a personal access token. GitHub must allow Actions to create pull requests in this repository. If that setting is disabled, the job reports the blocker; it does not change security settings. The sync job runs tests itself rather than assuming a bot-created PR automatically starts CI. GitHub may require approval of the separate PR workflow.
 
@@ -67,7 +71,7 @@ The checkout must be clean in the imported directory. Synchronization never exec
 
 `npm test` verifies plugin identity, license presence, every imported file hash and executable flag, complete source configuration, generated skill indexes, marketplace entries, and migration/synchronization behavior in temporary fixtures. It also rejects retired root skills and unexpected plugin directories.
 
-This is distribution-integrity verification, **not** proof that every upstream workflow works in a live Claude Code session or any Codex session. Review upstream behavioral changes before merging. Upstream companion plugins and external services are not bundled or silently installed.
+This is distribution-integrity verification, **not** proof that every upstream workflow works in a live Claude Code session or any Codex session. Review upstream behavioral changes before merging. Only the companion skills listed above are exposed; external services and Cursor built-ins are not installed.
 
 ## Licenses
 

@@ -8,6 +8,18 @@
       "path": "harness/pstack/claude-code",
       "destination": "plugins/pstack",
       "license": "MIT"
+    },
+    {
+      "name": "cursor-team-kit",
+      "repository": "cursor/plugins",
+      "ref": "main",
+      "path": "cursor-team-kit",
+      "destination": "plugins/cursor-team-kit",
+      "license": "MIT",
+      "adapter": {
+        "type": "cursor-skills",
+        "skills": ["deslop", "control-cli", "control-ui", "verify-this"]
+      }
     }
   ]
 }

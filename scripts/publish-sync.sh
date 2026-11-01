@@ -33,7 +33,7 @@ trap 'rm -f "$body"' EXIT
   echo
   node --input-type=module -e "import fs from 'node:fs'; for(const s of JSON.parse(fs.readFileSync('upstreams.lock.json','utf8')).sources) console.log('- '+s.name+' '+s.version+': https://github.com/'+s.repository+'/commit/'+s.revision)"
   echo
-  echo 'Imported files remain unchanged from the pinned upstream distribution.'
+  echo 'Imported source files remain unchanged. Reviewed collection adapters generate host metadata only.'
   echo
   echo '## Verification'
   echo '- Collection integrity checks and synchronization tests passed before publication.'
@@ -44,7 +44,7 @@ trap 'rm -f "$body"' EXIT
 } > "$body"
 number=$(gh pr list --head sync/pstack --base main --state open --json number --jq '.[0].number // empty')
 if [[ -n "$number" ]]; then
-  gh pr edit "$number" --title 'chore: sync upstream pstack' --body-file "$body"
+  gh pr edit "$number" --title 'chore: sync upstream skills' --body-file "$body"
 else
-  gh pr create --draft --head sync/pstack --base main --title 'chore: sync upstream pstack' --body-file "$body"
+  gh pr create --draft --head sync/pstack --base main --title 'chore: sync upstream skills' --body-file "$body"
 fi

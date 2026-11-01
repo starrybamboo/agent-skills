@@ -6,6 +6,11 @@
       "name": "pstack",
       "source": "./plugins/pstack",
       "description": "Unmodified upstream pstack Claude Code distribution, pinned and reviewed in this collection."
+    },
+    {
+      "name": "cursor-team-kit",
+      "source": "./plugins/cursor-team-kit",
+      "description": "Upstream pstack companion skills: deslop, control-cli, control-ui, and verify-this."
     }
   ]
 }

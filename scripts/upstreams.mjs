@@ -27,6 +27,10 @@ export async function configuration(base) {
     if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(source.repository) || typeof source.ref !== 'string' || !source.ref || source.ref.startsWith('-')) throw new Error('Invalid upstream repository or ref');
     relative(source.path);
     if (source.destination !== `plugins/${source.name}` || source.license !== 'MIT') throw new Error('Source needs a dedicated plugin destination and reviewed MIT license');
+    if (source.adapter !== undefined && (source.adapter.type !== 'cursor-skills' ||
+      !Array.isArray(source.adapter.skills) || source.adapter.skills.length === 0 ||
+      new Set(source.adapter.skills).size !== source.adapter.skills.length ||
+      !source.adapter.skills.every(name => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name)))) throw new Error('Invalid Cursor skill selection');
     names.add(source.name);
   }
   return config;
@@ -53,19 +57,29 @@ async function describe(directory, source) {
   if (plugin.name !== source.name || plugin.license !== source.license || !plugin.version) throw new Error('Plugin identity/license mismatch');
   const license = await fs.readFile(path.join(directory, 'LICENSE'), 'utf8');
   if (!license.includes('MIT License') || !license.includes('Permission is hereby granted')) throw new Error('Missing upstream MIT license');
+  if (source.adapter && encode(plugin) !== encode(await cursorManifest(path.join(directory, 'upstream'), source))) throw new Error('Generated Cursor adapter differs from source');
+  const entries = source.adapter ? source.adapter.skills.map(name => ({ name, folder: `upstream/skills/${name}` })) :
+    (await fs.readdir(path.join(directory, 'skills'), { withFileTypes: true })).filter(entry => entry.isDirectory()).map(entry => ({ name: entry.name, folder: `skills/${entry.name}` }));
   const skills = [];
-  for (const entry of (await fs.readdir(path.join(directory, 'skills'), { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name, 'en'))) {
-    if (!entry.isDirectory()) continue;
-    const file = path.join(directory, 'skills', entry.name, 'SKILL.md');
+  for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name, 'en'))) {
+    const file = path.join(directory, entry.folder, 'SKILL.md');
     const text = await fs.readFile(file, 'utf8');
     const front = text.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
     if (!front) throw new Error(`Missing skill frontmatter: ${entry.name}`);
     const fields = parse(front[1]);
     if (fields.name !== entry.name || typeof fields.description !== 'string' || !fields.description.trim()) throw new Error(`Invalid skill: ${entry.name}`);
-    skills.push({ name: fields.name, source: source.name, entrypoint: `${source.destination}/skills/${entry.name}/SKILL.md`, description: fields.description.trim(), disableModelInvocation: fields['disable-model-invocation'] === true });
+    skills.push({ name: fields.name, source: source.name, entrypoint: `${source.destination}/${entry.folder}/SKILL.md`, description: fields.description.trim(), disableModelInvocation: fields['disable-model-invocation'] === true });
   }
   if (!skills.length) throw new Error('Upstream plugin has no skills');
   return { version: plugin.version, skills };
+}
+
+async function cursorManifest(upstream, source) {
+  const original = await json(path.join(upstream, '.cursor-plugin/plugin.json'));
+  if (original.name !== source.name || original.license !== source.license || !original.version) throw new Error('Cursor plugin identity/license mismatch');
+  return { name: original.name, version: original.version, description: original.description,
+    author: original.author, homepage: original.homepage, repository: original.repository, license: original.license,
+    skills: source.adapter.skills.map(name => `./upstream/skills/${name}`) };
 }
 
 async function generated(base, config) {
@@ -75,8 +89,8 @@ async function generated(base, config) {
   for (let i = 0; i < config.sources.length; i++) {
     const source = config.sources[i];
     const pin = lock.sources[i];
-    for (const key of ['name', 'repository', 'ref', 'path', 'destination', 'license']) {
-      if (pin[key] !== source[key]) throw new Error(`Source configuration drift: ${key}`);
+    for (const key of ['name', 'repository', 'ref', 'path', 'destination', 'license', 'adapter']) {
+      if (encode(pin[key]) !== encode(source[key])) throw new Error(`Source configuration drift: ${key}`);
     }
     if (!/^[a-f0-9]{40}$/.test(pin.revision)) throw new Error('Invalid source revision');
     const dir = path.join(base, source.destination);
@@ -148,10 +162,15 @@ export async function sync(base = root, localSources = {}) {
         expected[name] = true;
       }
       if (Object.keys(files).length !== Object.keys(expected).length) throw new Error('Untracked or ignored files in upstream distribution');
-      const description = await describe(from, source);
       const to = path.join(stage, source.destination);
-      await fs.cp(from, to, { recursive: true, preserveTimestamps: true });
-      pins.push({ ...source, revision, version: description.version, files });
+      if (source.adapter) {
+        await fs.cp(from, path.join(to, 'upstream'), { recursive: true, preserveTimestamps: true });
+        await fs.mkdir(path.join(to, '.claude-plugin'));
+        await fs.writeFile(path.join(to, '.claude-plugin/plugin.json'), encode(await cursorManifest(from, source)));
+        await fs.copyFile(path.join(from, 'LICENSE'), path.join(to, 'LICENSE'));
+      } else await fs.cp(from, to, { recursive: true, preserveTimestamps: true });
+      const description = await describe(to, source);
+      pins.push({ ...source, revision, version: description.version, files: await inventory(to) });
     }
     await fs.writeFile(path.join(stage, 'upstreams.json'), encode(config));
     await fs.writeFile(path.join(stage, 'upstreams.lock.json'), encode({ schemaVersion: 1, sources: pins }));
@@ -179,7 +198,8 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     const manifest = await verify();
     console.log(`Verified ${manifest.skills.length} skills against pinned file hashes and marketplace.`);
   } else if (command === 'sync' && (args.length === 0 || (args.length === 2 && args[0] === '--pstack-checkout'))) {
-    const manifest = await sync(root, args.length ? { pstack: path.resolve(args[1]) } : {});
+    const manifest = await sync(root, args.length ? Object.fromEntries((await configuration(root)).sources
+      .filter(source => source.repository === 'cursor/plugins').map(source => [source.name, path.resolve(args[1])])) : {});
     console.log(`Synced ${manifest.skills.length} skills without executing upstream scripts.`);
   } else throw new Error('Usage: upstreams.mjs verify | sync [--pstack-checkout PATH]');
 }

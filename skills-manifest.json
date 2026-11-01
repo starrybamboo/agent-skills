@@ -13,6 +13,25 @@
       "license": "MIT",
       "revision": "ae5650febf4320793844c12c4adaa937f417f8da",
       "version": "0.15.36"
+    },
+    {
+      "name": "cursor-team-kit",
+      "repository": "cursor/plugins",
+      "ref": "main",
+      "path": "cursor-team-kit",
+      "destination": "plugins/cursor-team-kit",
+      "license": "MIT",
+      "adapter": {
+        "type": "cursor-skills",
+        "skills": [
+          "deslop",
+          "control-cli",
+          "control-ui",
+          "verify-this"
+        ]
+      },
+      "revision": "ae5650febf4320793844c12c4adaa937f417f8da",
+      "version": "1.2.0"
     }
   ],
   "skills": [
@@ -421,6 +440,34 @@
       "entrypoint": "plugins/pstack/skills/why/SKILL.md",
       "description": "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers available MCPs and queries each evidence category (source control, issue tracker, long-form docs, real-time chat, infrastructure observability, error tracking, product analytics warehouse) in parallel, then returns a cited read on decisions and tradeoffs. Use how for runtime behavior.",
       "disableModelInvocation": true
+    },
+    {
+      "name": "control-cli",
+      "source": "cursor-team-kit",
+      "entrypoint": "plugins/cursor-team-kit/upstream/skills/control-cli/SKILL.md",
+      "description": "Build or adapt a local harness to drive, inspect, and profile an interactive CLI or TUI without external services. Use for CLI UX checks, startup regressions, memory leaks, hangs, prompt flows, or terminal demos.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "control-ui",
+      "source": "cursor-team-kit",
+      "entrypoint": "plugins/cursor-team-kit/upstream/skills/control-ui/SKILL.md",
+      "description": "Build or adapt a local browser/CDP harness to drive and inspect a web, IDE, or Electron UI. Use for local UI verification, screenshots, accessibility snapshots, perf profiles, visual diffs, or reproducing UI bugs.",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "deslop",
+      "source": "cursor-team-kit",
+      "entrypoint": "plugins/cursor-team-kit/upstream/skills/deslop/SKILL.md",
+      "description": "Remove AI-generated code slop and clean up code style",
+      "disableModelInvocation": false
+    },
+    {
+      "name": "verify-this",
+      "source": "cursor-team-kit",
+      "entrypoint": "plugins/cursor-team-kit/upstream/skills/verify-this/SKILL.md",
+      "description": "Verify a claim with fresh local evidence: restate it falsifiably, capture baseline and treatment, compare artifacts, and return VERIFIED, NOT VERIFIED, or INCONCLUSIVE.",
+      "disableModelInvocation": false
     }
   ]
 }

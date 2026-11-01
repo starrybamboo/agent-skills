@@ -149,3 +149,56 @@ test('committed executable mode is enforced even when git ignores mode drift', a
   await fs.chmod(path.join(f.dir, 'scripts/probe.sh'), 0o644);
   await assert.rejects(f.run(), /mode differ/);
 });
+
+async function cursorFixture(t) {
+  const f = await fixture(t);
+  const source = { name: 'cursor-team-kit', repository: 'cursor/plugins', ref: 'main', path: 'cursor-kit',
+    destination: 'plugins/cursor-team-kit', license: 'MIT', adapter: { type: 'cursor-skills', skills: ['deslop', 'control-ui'] } };
+  f.config.sources.push(source);
+  await write(path.join(f.base, 'upstreams.json'), encode(f.config));
+  await write(path.join(f.base, '.claude-plugin/marketplace.json'), encode({ name: 'test', plugins:
+    f.config.sources.map(s => ({ name: s.name, source: `./${s.destination}` })) }));
+  const dir = path.join(f.upstream, source.path);
+  await write(path.join(dir, '.cursor-plugin/plugin.json'), encode({ name: source.name, version: '1.2.0', license: 'MIT', description: 'Cursor tools' }));
+  await write(path.join(dir, 'LICENSE'), 'MIT License\nPermission is hereby granted\n');
+  for (const name of ['deslop', 'control-ui', 'unrelated-workflow']) {
+    await write(path.join(dir, 'skills', name, 'SKILL.md'), `---\nname: ${name}\ndescription: ${name} tool\n---\nOriginal instructions.\n`);
+  }
+  await write(path.join(dir, 'agents/unused.md'), 'Cursor-only agent');
+  await write(path.join(dir, 'rules/unused.mdc'), 'Cursor-only rule');
+  f.commit();
+  return { ...f, cursorDirectory: dir, run: () => sync(f.base, { pstack: f.upstream, 'cursor-team-kit': f.upstream }) };
+}
+
+test('Cursor adapter preserves the whole source but only exposes selected portable skills', async t => {
+  const f = await cursorFixture(t);
+  const result = await f.run();
+  const plugin = path.join(f.base, 'plugins/cursor-team-kit');
+  assert.deepEqual(await inventory(path.join(plugin, 'upstream')), await inventory(f.cursorDirectory));
+  const manifest = JSON.parse(await fs.readFile(path.join(plugin, '.claude-plugin/plugin.json')));
+  assert.deepEqual(manifest.skills, ['./upstream/skills/deslop', './upstream/skills/control-ui']);
+  assert.deepEqual(result.skills.filter(s => s.source === 'cursor-team-kit').map(s => s.name), ['control-ui', 'deslop']);
+  for (const name of ['skills', 'agents', 'rules', 'hooks']) await assert.rejects(fs.access(path.join(plugin, name)), { code: 'ENOENT' });
+  const before = await inventory(f.base);
+  await f.run();
+  assert.deepEqual(await inventory(f.base), before);
+});
+
+test('missing selected upstream skills stop synchronization before replacing the existing plugin', async t => {
+  const f = await cursorFixture(t);
+  await f.run();
+  const before = await inventory(f.base);
+  await fs.rm(path.join(f.cursorDirectory, 'skills/control-ui'), { recursive: true });
+  f.commit();
+  await assert.rejects(f.run(), { code: 'ENOENT' });
+  assert.deepEqual(await inventory(f.base), before);
+});
+
+test('invalid adapter paths and duplicate selections cannot enter the catalog', async t => {
+  const f = await cursorFixture(t);
+  for (const selection of [['../escape'], ['deslop', 'deslop'], []]) {
+    f.config.sources[1].adapter.skills = selection;
+    await write(path.join(f.base, 'upstreams.json'), encode(f.config));
+    await assert.rejects(configuration(f.base), /Invalid Cursor skill selection/);
+  }
+});
