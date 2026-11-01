@@ -69,6 +69,8 @@ The checkout must be clean in the imported directory. Synchronization never exec
 
 ## What validation proves
 
+The [complete skill audit](docs/skill-audit.md) covers all active entries, external references, invocation flags and known Claude Code limitations at the recorded upstream revision. Run `npm run audit:skills` to check the current distribution for broken relative links and unclassified named-skill references. Host limitations are reported separately from missing files.
+
 `npm test` verifies plugin identity, license presence, every imported file hash and executable flag, complete source configuration, generated skill indexes, marketplace entries, and migration/synchronization behavior in temporary fixtures. It also rejects retired root skills and unexpected plugin directories.
 
 This is distribution-integrity verification, **not** proof that every upstream workflow works in a live Claude Code session or any Codex session. Review upstream behavioral changes before merging. Only the companion skills listed above are exposed; external services and Cursor built-ins are not installed.
