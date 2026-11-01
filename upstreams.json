@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "name": "pstack",
+      "repository": "cursor/plugins",
+      "ref": "main",
+      "path": "harness/pstack/claude-code",
+      "destination": "plugins/pstack",
+      "license": "MIT"
+    }
+  ]
+}

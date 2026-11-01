@@ -2,17 +2,18 @@
   "name": "starrybamboo-agent-skills",
   "version": "0.0.0",
   "private": true,
-  "description": "Public reusable agent skills curated by starrybamboo",
   "type": "module",
+  "description": "Pinned upstream agent skill collections, with reproducible synchronization",
   "scripts": {
-    "generate:router": "node scripts/generate-skills-router.mjs",
-    "check:router": "node scripts/generate-skills-router.mjs --check",
-    "validate": "node scripts/validate-skills.mjs && npm run check:router",
-    "test:manager": "node scripts/test-manager.mjs",
-    "test": "npm run validate && npm run test:manager"
+    "sync:upstreams": "node scripts/upstreams.mjs sync",
+    "validate": "node scripts/upstreams.mjs verify",
+    "test": "npm run validate && node --test scripts/*.test.mjs"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "yaml": "2.9.1"
+  }
 }

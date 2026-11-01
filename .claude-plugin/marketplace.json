@@ -1,0 +1,11 @@
+{
+  "name": "starrybamboo-skills",
+  "owner": { "name": "starrybamboo" },
+  "plugins": [
+    {
+      "name": "pstack",
+      "source": "./plugins/pstack",
+      "description": "Unmodified upstream pstack Claude Code distribution, pinned and reviewed in this collection."
+    }
+  ]
+}

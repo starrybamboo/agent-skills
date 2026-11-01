@@ -1,0 +1,50 @@
+name: Sync upstream skills
+on:
+  push:
+    branches: [main]
+    paths:
+      - upstreams.json
+      - scripts/upstreams.mjs
+      - scripts/publish-sync.sh
+      - .github/workflows/sync-upstreams.yml
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sync-upstream-skills
+  cancel-in-progress: false
+jobs:
+  sync:
+    if: github.repository == 'starrybamboo/agent-skills' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+      - name: Continue the existing sync branch without rewriting history
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git show-ref --verify --quiet refs/remotes/origin/sync/pstack; then
+            git switch --create sync/pstack origin/sync/pstack
+            git merge --no-edit origin/main
+          else
+            git switch --create sync/pstack
+          fi
+      - run: npm ci --ignore-scripts
+      - run: npm run sync:upstreams
+      - run: npm test
+      - name: Publish a draft update only when needed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/publish-sync.sh

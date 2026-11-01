@@ -1,247 +1,413 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "repository": "starrybamboo/agent-skills",
   "defaultBranch": "main",
   "skills": [
     {
-      "name": "afk",
-      "entrypoint": "skills/afk/SKILL.md",
-      "description": "Continue already-authorized work while the user is away from the keyboard, sleeping, eating, commuting, or otherwise unavailable. Use when the user says they are leaving and wants Codex to keep working, monitor tasks, finish, babysit, or perform cleanup without further interaction. Advance independent wrap-up while leaving unrelated suspended work untouched; resolve only blocking in-scope choices from established preferences, project instructions, code evidence, and the simplest-correct default.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "ask-matt",
-      "entrypoint": "skills/ask-matt/SKILL.md",
-      "description": "Choose the smallest useful skill or workflow for the current situation.",
+      "name": "architect",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/architect/SKILL.md",
+      "description": "Sketch types, signatures, and module structure before code, then stay in the loop while implementation fills in. Use for /architect, 'architect this', 'design this', or non-trivial work where jumping to code would lock in the wrong shape.",
       "disableModelInvocation": true
     },
     {
-      "name": "capability-pruning",
-      "entrypoint": "skills/capability-pruning/SKILL.md",
-      "description": "Prune a codebase by capability — inventory every capability, give each an evidence card, and let the owner decide removals item by item. Use when simplifying or slimming a project, hunting for unused features or dead mechanisms, or before claiming that something is unused, never used, or safe to delete.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "code-review",
-      "entrypoint": "skills/code-review/SKILL.md",
-      "description": "Review a branch, PR, or work-in-progress diff against a fixed base for correctness, requirements, and consequential coding standards. Use one combined reviewer by default and add reviewers only for distinct material risks.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "codebase-design",
-      "entrypoint": "skills/codebase-design/SKILL.md",
-      "description": "Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "diagnosing-bugs",
-      "entrypoint": "skills/diagnosing-bugs/SKILL.md",
-      "description": "Structured feedback-loop diagnosis for exceptionally difficult, stubborn, recurring, high-regression-risk, or previously misfixed bugs. Ordinary, localized, first-pass bugs stay outside this skill.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "domain-modeling",
-      "entrypoint": "skills/domain-modeling/SKILL.md",
-      "description": "Build and sharpen a project's domain model. Use when discussing codebase terminology, writing or editing a GLOSSARY.md, or recording or editing an ADR.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "e2e-first-testing",
-      "entrypoint": "skills/e2e-first-testing/SKILL.md",
-      "description": "Test strategy for a repository — which tests to write, keep, or delete. Use when adding tests for a change or a bug fix, designing fakes, mocks or test doubles, reviewing a diff that adds or edits tests, deciding whether a regression test is warranted, or pruning a slow or brittle test suite.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "false-green",
-      "entrypoint": "skills/false-green/SKILL.md",
-      "description": "Run a comprehensive false-green audit of tests and their verification gates.",
+      "name": "arena",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/arena/SKILL.md",
+      "description": "Spawn N parallel candidates at the same task, pick a base, graft the strongest parts of the losers into it. Use for /arena, 'arena this', 'throw it in the arena', or when one attempt at a non-trivial artifact would lock in the wrong shape.",
       "disableModelInvocation": true
     },
     {
-      "name": "grill-me",
-      "entrypoint": "skills/grill-me/SKILL.md",
-      "description": "A relentless interview to sharpen a plan or design.",
+      "name": "automate-me",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/automate-me/SKILL.md",
+      "description": "Use for \"automate me\", \"create/update/refresh my -mode skill\", \"turn/capture my preferences or working style into a skill\", or wanting agents to follow how the user works. Drafts or revises a personal -mode skill via create-skill + unslop, optionally pulling fresh evidence from recent transcripts.",
       "disableModelInvocation": true
     },
     {
-      "name": "grill-with-docs",
-      "entrypoint": "skills/grill-with-docs/SKILL.md",
-      "description": "A relentless interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go.",
+      "name": "benchmark-checklist",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/benchmark-checklist/SKILL.md",
+      "description": "Vet a perf measurement (limiter, tuning, limits, errors, repeatability, relevance, and whether the work happened) before you report or act on it. Use when you run a benchmark or report a speedup or regression you measured.",
       "disableModelInvocation": true
     },
     {
-      "name": "grilling",
-      "entrypoint": "skills/grilling/SKILL.md",
-      "description": "Grill the user relentlessly about a plan, decision, or idea, from its design intent through an implementable shape. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "handoff",
-      "entrypoint": "skills/handoff/SKILL.md",
-      "description": "Curate a compact handoff when the user requests one, ownership moves, or substantial remaining work needs a fresh context. Preserve decisions, source pointers, exact state, and valid evidence.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "implement",
-      "entrypoint": "skills/implement/SKILL.md",
-      "description": "Implement agreed work with timely verification and review.",
+      "name": "blast-radius",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/blast-radius/SKILL.md",
+      "description": "Find what a change could break somewhere else before it ships, beyond the diff, and prove the one fact it's safe because of by running real code instead of writing it up. Use for 'blast radius of X', 'what could this break', or reviewing a small diff you don't trust.",
       "disableModelInvocation": true
     },
     {
-      "name": "implement-spec",
-      "entrypoint": "skills/implement-spec/SKILL.md",
-      "description": "Implement the result of /to-spec and /to-tickets in code.",
+      "name": "bro",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/bro/SKILL.md",
+      "description": "Restate the last message in plain human language, with no jargon.",
       "disableModelInvocation": true
     },
     {
-      "name": "improve-codebase-architecture",
-      "entrypoint": "skills/improve-codebase-architecture/SKILL.md",
-      "description": "Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.",
+      "name": "correct",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/correct/SKILL.md",
+      "description": "Find the mistakes agents keep repeating in this repo and make each one impossible. Try architecture first, then types, then a lint whose error names the fix, then a test, and write docs last. Prove each check fails on a real past mistake. Repeat this each time the operator corrects you. Use for /correct.",
       "disableModelInvocation": true
     },
     {
-      "name": "llm-agent-surface",
-      "entrypoint": "skills/llm-agent-surface/SKILL.md",
-      "description": "Design rules for what an LLM sees inside an agent framework — tool schemas, rejection messages, prompts — and for where the framework stops and the model decides. Use when building or changing an LLM agent, adding a tool or a schema field, writing a rejection or validation message, fixing a wrong model decision, or adding validation, retries or guards around model output.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "minimal-design-gate",
-      "entrypoint": "skills/minimal-design-gate/SKILL.md",
-      "description": "A gate against over-design, applied before and after a change. Use when proposing a design or a fix, writing a brief for another agent, reviewing a diff or an agent's delivery, or when a change adds fields, options, abstractions, fallbacks, compatibility paths or dependencies.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "pr",
-      "entrypoint": "skills/pr/SKILL.md",
-      "description": "Use when writing a PR body.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "prototype",
-      "entrypoint": "skills/prototype/SKILL.md",
-      "description": "Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic feels right, or explore what a UI should look like.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "reduce-complexity",
-      "entrypoint": "skills/reduce-complexity/SKILL.md",
-      "description": "Reduce accidental complexity in ideas, plans, ADRs, and specifications before implementation. Use for a spec audit, subtraction audit, complexity budget, simpler architecture, or over-engineering review at the product and architecture surface; use simplify-code for implementation changes.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "repo-audit-loop",
-      "entrypoint": "skills/repo-audit-loop/SKILL.md",
-      "description": "Audit a whole repository, or a batch of finished work, until a round finds nothing — coverage ledger over every tracked file, orthogonal lenses, spec–code sync, every public entry actually run, and a defect ledger cleared as you go. Use when asked to audit, review or health-check a project, when closing out a batch of changes, before a release or handover, or when checking that specs and code still agree.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "research",
-      "entrypoint": "skills/research/SKILL.md",
-      "description": "Investigate a question against high-trust primary sources and deliver findings in Markdown by default, using HTML only for an explicitly requested polished human-facing report. Use when the user wants a topic researched, docs or API facts gathered, or reading legwork delegated to a background agent.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "retro",
-      "entrypoint": "skills/retro/SKILL.md",
-      "description": "Conduct a retrospective on a coding session.",
+      "name": "create-formal-verification-skill",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/create-formal-verification-skill/SKILL.md",
+      "description": "Generate a project-local skill that formally verifies the code where a bug costs the most and tests reach the least, in any language, with whichever verification tool fits. Use for /create-formal-verification-skill, \"model-check this race\", \"prove this invariant\", or when concurrency, retries, state machines, parsers, or unsafe code need more than tests.",
       "disableModelInvocation": true
     },
     {
-      "name": "setup-matt-pocock-skills",
-      "entrypoint": "skills/setup-matt-pocock-skills/SKILL.md",
-      "description": "Configure this repo for the engineering skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.",
+      "name": "create-verification-skill",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/create-verification-skill/SKILL.md",
+      "description": "Generate a project-local verification skill that drives your app the way a user does — any language, framework, or platform. Use for /create-verification-skill, \"make a control skill for this repo\", or when a project has no scripted way to prove UI/CLI/service behavior.",
       "disableModelInvocation": true
     },
     {
-      "name": "shared-skills-manager",
-      "entrypoint": "skills/shared-skills-manager/SKILL.md",
-      "description": "Install, update, inspect, or schedule updates for the public starrybamboo/agent-skills catalog. Invoke explicitly with setup, update, status, pause, resume, disable, or schedule.",
+      "name": "figure-it-out",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/figure-it-out/SKILL.md",
+      "description": "Design an auditable playbook when no narrower one fits: a large migration, an ambitious multi-part change, or work a human reviews after stepping away. Scales rigor to the task, runs a hypothesis loop, and logs decisions. Use for /figure-it-out or 'figure it out'.",
       "disableModelInvocation": true
     },
     {
-      "name": "simplify-code",
-      "entrypoint": "skills/simplify-code/SKILL.md",
-      "description": "Simplify existing implementation code, tests, modules, state, or operational machinery without changing approved behavior, architecture, or failure policy. Use when the user asks to simplify code, remove over-engineering, clean up a reviewed diff, or when an authorized implementation workflow reaches its final simplification pass.",
+      "name": "how",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/how/SKILL.md",
+      "description": "Use for \"how does X work\", code walkthroughs before changing something, and placement / ownership / layering questions (\"where should this live\", \"which package owns this\", \"is this the right layer\"). Explains subsystem architecture, runtime flow, onboarding mental models. Use why for motivation.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "in-your-own-words",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/in-your-own-words/SKILL.md",
+      "description": "Restate in your own words what you think the user's goals are and what problem they're trying to solve. Use for /in-your-own-words.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "interrogate",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/interrogate/SKILL.md",
+      "description": "Use for \"interrogate\", \"adversarial review\", \"multi-model review\", \"challenge this\", \"stress test this code\", \"find blind spots\", or \"tear this apart\". Adversaries try to break a change or design, and only findings proven by a run survive.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "ketchup",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/ketchup/SKILL.md",
+      "description": "Catch the user up on what changed in this chat since their last message, in plain words and small visuals. List every item waiting on them with what they need to decide it from the reply alone. Use for /ketchup.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "ketchup-video",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/ketchup-video/SKILL.md",
+      "description": "Catch the user up like /ketchup, with a short subtitled video of slides for what happened and the waiting calls as text under it. Use for /ketchup-video.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "maintain-formal-verification-skill",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/maintain-formal-verification-skill/SKILL.md",
+      "description": "Bring a project's formal verification back in line with the code after the code changes: find the commits that touched verified code, update the model, harness, or properties to describe the code as it is now, rerun, and say whether each failure is drift in the verification or a bug in the code. Use for /maintain-formal-verification-skill, \"is the model still true to the code\", or after merges and refactors that touched verified code without rechecking it.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "maintain-verification-skill",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/maintain-verification-skill/SKILL.md",
+      "description": "Periodic pass that keeps a project's verification skill and feature map honest: parallel source readers per feature, one live session driving every feature, at most one PR of proven corrections. Use for /maintain-verification-skill or \"audit the verify skill\".",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "make-bot-ui",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/make-bot-ui/SKILL.md",
+      "description": "Use when building a custom UI (page, dashboard, buttons) that should wake a Grok Bot over a webhook, when the user must provide a webhook sender key, or when exposing that UI on Tailscale.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "no-comments",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/no-comments/SKILL.md",
+      "description": "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "poteto-help",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/poteto-help/SKILL.md",
+      "description": "Guides users through pstack setup, /poteto-mode, and picking the skill, playbook, or principle for a task. Type /poteto-help with a question.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "poteto-mode",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/poteto-mode/SKILL.md",
+      "description": "poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-attack-the-premise",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-attack-the-premise/SKILL.md",
+      "description": "Apply when two or more fixes that share one premise have failed the same gate. Write the premise down and test it directly before you write another fix that assumes it.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-boundary-discipline",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-boundary-discipline/SKILL.md",
+      "description": "Apply when wiring validation, error handling, or framework adapters. Concentrate guards at system boundaries (CLI, config, network, external APIs); trust internal types and keep business logic in pure functions.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-build-the-lever",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-build-the-lever/SKILL.md",
+      "description": "Apply to any non-trivial work, not just bulk work: edits, migrations, analyses, checks. Build the tool that does it or proves it (codemod, script, generator, or a skill your subagents follow) instead of working by hand. The tool is the artifact a reviewer can rerun.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-encode-lessons-in-structure",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-encode-lessons-in-structure/SKILL.md",
+      "description": "Apply when you catch yourself writing the same instruction a second time, or notice a recurring correction. Encode the rule as a lint, metadata flag, runtime check, or script instead of more text.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-exhaust-the-design-space",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-exhaust-the-design-space/SKILL.md",
+      "description": "Apply when facing a novel UI interaction or architectural decision with no precedent in the codebase. Build 2-3 competing prototypes and compare side by side before committing.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-experience-first",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-experience-first/SKILL.md",
+      "description": "Apply when product, UX, or feature-scope tradeoffs come up. Choose user delight over implementation convenience; ship fewer polished features over more rough ones.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-explain-the-number",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-explain-the-number/SKILL.md",
+      "description": "Apply before you measure, and before you trust, report, or act on a number you measured: a speedup, a regression, a throughput, a latency, or an eval result. Find what limits it, and rule out that it measured something other than the work you think.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-fix-root-causes",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-fix-root-causes/SKILL.md",
+      "description": "Apply when debugging. Trace each symptom back to the first place the system went wrong and fix it there. A guard is a fix only when the state it handles is legitimate.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-foundational-thinking",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-foundational-thinking/SKILL.md",
+      "description": "Apply before writing logic: choosing core types and data structures, sequencing scaffold-vs-feature work, asking what concurrent actors share. Get the data structures right so downstream code becomes obvious.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-guard-the-context-window",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-guard-the-context-window/SKILL.md",
+      "description": "Apply when context is filling up: large outputs, long files, repeated reads, fan-out planning. Route bulk to subagents; keep summaries in the main thread, not raw payloads.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-laziness-protocol",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-laziness-protocol/SKILL.md",
+      "description": "Apply when refactoring, evaluating diff size, or tempted to add abstractions, layers, or signal threading. Bias toward deletion and the smallest change that solves the problem.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-make-operations-idempotent",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-make-operations-idempotent/SKILL.md",
+      "description": "Apply when designing commands, lifecycle steps, or processing loops that run amid crashes, restarts, and retries. Converge to the same end state regardless of partial prior runs.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-migrate-callers-then-delete-legacy-apis",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md",
+      "description": "Apply when introducing a new internal API while old callers still exist. Migrate callers and delete the old API in the same wave instead of preserving compatibility layers.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-minimize-reader-load",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-minimize-reader-load/SKILL.md",
+      "description": "Apply when reviewing or shaping code that's hard to trace. Count layers between question and answer, and hidden state in the reader's head; collapse one-caller wrappers and shrink mutable scope.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-model-the-domain",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-model-the-domain/SKILL.md",
+      "description": "Apply when writing stateful logic, or when code branches a lot or repeats a shape assumption across files.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-never-block-on-the-human",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-never-block-on-the-human/SKILL.md",
+      "description": "Apply when tempted to ask 'should I do X?' on reversible work.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-outcome-oriented-execution",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-outcome-oriented-execution/SKILL.md",
+      "description": "Apply during planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture; don't preserve smooth intermediate states with throwaway compatibility code.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-prove-it-works",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-prove-it-works/SKILL.md",
+      "description": "Apply after completing a task, before declaring done. Verify against the real artifact (run the feature, read the actual value, inspect the diff), not a proxy, self-report, or 'it compiles.'",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-redesign-from-first-principles",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-redesign-from-first-principles/SKILL.md",
+      "description": "Apply when integrating a new requirement into an existing design.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-separate-before-serializing-shared-state",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-separate-before-serializing-shared-state/SKILL.md",
+      "description": "Apply when concurrent actors might write to the same file, branch, key, or state object. Eliminate the sharing first; serialize structurally only when one shared writer is a real invariant.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-sequence-verifiable-units",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-sequence-verifiable-units/SKILL.md",
+      "description": "Apply to multi-step work (sweeps, migrations, runs of similar edits) and to how you stack commits and PRs. Break work into small units that each end in a verifiable state, check each before the next, and order delivery so the sequence proves itself to a reviewer.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-subtract-before-you-add",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-subtract-before-you-add/SKILL.md",
+      "description": "Apply when sequencing an addition, refactor, or rewrite. Remove dead code, redundant validators, and stub references first, then build on the simpler base.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-test-behavior-not-implementation",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-test-behavior-not-implementation/SKILL.md",
+      "description": "Apply when you write, change, or keep a test. Assert what the code's users can observe, so that the test fails when that behavior breaks and keeps passing when only the internals change.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "principle-type-system-discipline",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/principle-type-system-discipline/SKILL.md",
+      "description": "Apply when designing types, reviewing a function signature, or writing code in any statically-typed language. Make illegal states unrepresentable, brand semantic primitives, parse external data at boundaries, exhaust variants, derive from authoritative schemas.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "recall",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/recall/SKILL.md",
+      "description": "Reconstruct your recent working context from your own chat history, live state, and the shared record (user reports, prior fixes, incidents), then hand back a tight current-state brief. Use for 'recall my work on X', 'catch me up', 'what have I been working on', 'where did I leave off', before starting or resuming work.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "reflect",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/reflect/SKILL.md",
+      "description": "Spawn three parallel review subagents over the active transcript, surface learnings, and route each to a concrete edit on an existing skill. Use when the user says reflect.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "setup-pstack",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/setup-pstack/SKILL.md",
+      "description": "Configure which models pstack uses per role and at what reasoning budget. Detects your available models and writes an always-applied rule that overrides the skill defaults. Use for /setup-pstack, \"configure pstack models\", \"pstack budget\", or changing pstack's model choices.",
       "disableModelInvocation": false
     },
     {
-      "name": "site-annotated-gates",
-      "entrypoint": "skills/site-annotated-gates/SKILL.md",
-      "description": "Enforce architectural and code-shape rules with static gates whose exceptions are annotated at the code site. Use when adding a lint or CI check for an architectural constraint, when a test is about to lock code structure, when an allowlist or exemption list keeps growing, or when a rule needs justified exceptions.",
-      "disableModelInvocation": false
+      "name": "sharpen",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/sharpen/SKILL.md",
+      "description": "Make a task deeper, not bigger, then rewrite the prompt. Use for /sharpen.",
+      "disableModelInvocation": true
     },
     {
-      "name": "structural-fix",
-      "entrypoint": "skills/structural-fix/SKILL.md",
-      "description": "How to fix a defect so its whole class disappears, not just the reported instance. Use when fixing a bug, writing a fix brief for another agent, reviewing someone's fix, or when a fix is tempting to write as a guard, special case, retry cap or fallback.",
-      "disableModelInvocation": false
+      "name": "show-me-your-work",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/show-me-your-work/SKILL.md",
+      "description": "Keep a reviewable decision trail for long-running or unattended work: a TSV log with one row per decision (what, why, evidence, result). Local by default; commit it when a reviewer needs the trail to trust the result. Use for /show-me-your-work, autonomous or multi-phase runs, or work a human reviews after stepping away.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "statechart",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/statechart/SKILL.md",
+      "description": "Check a TLA+ model of a system that moves between states, such as a product flow, a protocol, or a service, and draw it as a Mermaid statechart. The report gives the shortest path to each state that breaks a rule. Use for /statechart, or to show a bug as a path through states.",
+      "disableModelInvocation": true
+    },
+    {
+      "name": "swarm",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/swarm/SKILL.md",
+      "description": "Fan out N parallel workers, drain them, and return one report. Use for /swarm, 'swarm this', or parallel coverage, races, gauntlets, and exploration.",
+      "disableModelInvocation": true
     },
     {
       "name": "tdd",
-      "entrypoint": "skills/tdd/SKILL.md",
-      "description": "Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions \"red-green-refactor\", or wants integration tests.",
-      "disableModelInvocation": false
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/tdd/SKILL.md",
+      "description": "Use only when the user explicitly asks for TDD, a failing test, or a regression test, OR when the bug has an obvious cheap local test target. Skip when the test path is unclear, expensive, integration-heavy, or not requested.",
+      "disableModelInvocation": true
     },
     {
       "name": "teach",
-      "entrypoint": "skills/teach/SKILL.md",
-      "description": "Teach the user a new skill or concept, within this workspace.",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/teach/SKILL.md",
+      "description": "Explain a body of work plainly so a person actually understands it. Runs the `how` and `why` skills and weaves what they find into one clear explanation. Use for 'teach me this', 'help me really understand X', 'explain this change or subsystem to me'.",
       "disableModelInvocation": true
     },
     {
-      "name": "to-questionnaire",
-      "entrypoint": "skills/to-questionnaire/SKILL.md",
-      "description": "Turn a decision you can't fully answer into a questionnaire for someone else to fill in.",
+      "name": "technical-writing",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/technical-writing/SKILL.md",
+      "description": "Layered technical-writing standard: Diátaxis structure, Google developer style sentences, STE instruction rules, Global English syntax. Use for /technical-writing or when writing or reviewing docs, RFCs, readmes, PR descriptions, or commit messages.",
       "disableModelInvocation": true
     },
     {
-      "name": "to-spec",
-      "entrypoint": "skills/to-spec/SKILL.md",
-      "description": "Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you've already discussed.",
-      "disableModelInvocation": true
-    },
-    {
-      "name": "to-tickets",
-      "entrypoint": "skills/to-tickets/SKILL.md",
-      "description": "Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker (edges as text in one file per ticket locally, or native blocking links on a real tracker).",
-      "disableModelInvocation": true
-    },
-    {
-      "name": "triage",
-      "entrypoint": "skills/triage/SKILL.md",
-      "description": "Move issues and external PRs through a state machine of triage roles, categorise, verify, grill if needed, and write agent-ready briefs.",
+      "name": "typescript-best-practices",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/typescript-best-practices/SKILL.md",
+      "description": "TypeScript best practices. Use when reading or editing any .ts or .tsx file.",
       "disableModelInvocation": true
     },
     {
       "name": "unslop",
-      "entrypoint": "skills/unslop/SKILL.md",
-      "description": "Remove stock AI phrasing, empty abstraction, promotional filler, rigid structure, and punctuation tells from natural-language prose while preserving its meaning and intended tone. Use whenever drafting, rewriting, polishing, or reviewing user-facing prose; skip code, exact quotations, and wording that must remain unchanged.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "wait-what",
-      "entrypoint": "skills/wait-what/SKILL.md",
-      "description": "Stop. That last message did not land: re-pitch it.",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/unslop/SKILL.md",
+      "description": "Cut AI tells from any writing.",
       "disableModelInvocation": true
     },
     {
-      "name": "wayfinder",
-      "entrypoint": "skills/wayfinder/SKILL.md",
-      "description": "Plan a huge chunk of work (more than one agent session can hold) as a shared map of decision tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.",
+      "name": "why",
+      "source": "pstack",
+      "entrypoint": "plugins/pstack/skills/why/SKILL.md",
+      "description": "Use for 'why does X work this way', 'why we picked Y', design rationale, regressions, postmortems, or data-backed thresholds. Discovers available MCPs and queries each evidence category (source control, issue tracker, long-form docs, real-time chat, infrastructure observability, error tracking, product analytics warehouse) in parallel, then returns a cited read on decisions and tradeoffs. Use how for runtime behavior.",
       "disableModelInvocation": true
-    },
-    {
-      "name": "wizard",
-      "entrypoint": "skills/wizard/SKILL.md",
-      "description": "Generate an interactive bash wizard that walks a human through steps only they can perform. Use when provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover. Don't invoke this for steps the agent can perform itself.",
-      "disableModelInvocation": false
-    },
-    {
-      "name": "writing-for-agents",
-      "entrypoint": "skills/writing-for-agents/SKILL.md",
-      "description": "Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.",
-      "disableModelInvocation": false
     }
   ]
 }
