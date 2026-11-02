@@ -1,0 +1,4 @@
+interface:
+  display_name: "pstack for Codex"
+  short_description: "Run pstack rigorous engineering workflows"
+  default_prompt: "Use $pstack to run this task with the pstack workflow."

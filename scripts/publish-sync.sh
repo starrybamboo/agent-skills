@@ -4,10 +4,12 @@ if [[ "$(git branch --show-current)" != 'sync/pstack' ]]; then
   echo 'Refusing to publish outside sync/pstack' >&2
   exit 1
 fi
-git add -- plugins upstreams.lock.json skills-manifest.json skills-router.json
+stage_paths=(plugins upstreams.lock.json skills-manifest.json skills-router.json)
+if [[ -d harness/codex ]]; then stage_paths+=(harness/codex); fi
+git add -- "${stage_paths[@]}"
 while IFS= read -r -d '' file; do
   case "$file" in
-    plugins/*|upstreams.lock.json|skills-manifest.json|skills-router.json) ;;
+    plugins/*|harness/codex/*|upstreams.lock.json|skills-manifest.json|skills-router.json) ;;
     *) echo "Unexpected staged change: $file" >&2; exit 1 ;;
   esac
 done < <(git diff --cached --name-only -z)
@@ -16,12 +18,14 @@ if ! git diff --cached --quiet; then
   git commit -m "chore: sync upstream skills ($revision)"
 fi
 if git diff --quiet origin/main HEAD -- plugins upstreams.lock.json skills-manifest.json skills-router.json; then
-  echo 'No upstream changes to propose.'
-  exit 0
+  if [[ ! -d harness/codex ]] || git diff --quiet origin/main HEAD -- harness/codex; then
+    echo 'No upstream changes to propose.'
+    exit 0
+  fi
 fi
 while IFS= read -r -d '' file; do
   case "$file" in
-    plugins/*|upstreams.lock.json|skills-manifest.json|skills-router.json) ;;
+    plugins/*|harness/codex/*|upstreams.lock.json|skills-manifest.json|skills-router.json) ;;
     *) echo "Unexpected sync branch change: $file" >&2; exit 1 ;;
   esac
 done < <(git diff --name-only -z origin/main HEAD)
@@ -35,8 +39,10 @@ trap 'rm -f "$body"' EXIT
   echo
   echo 'Imported source files remain unchanged. Reviewed collection adapters generate host metadata only.'
   echo
+  echo 'The Codex harness is generated from the same pinned pstack tree.'
+  echo
   echo '## Verification'
-  echo '- Collection integrity checks and synchronization tests passed before publication.'
+  echo '- Collection integrity checks, Codex harness checks, and synchronization tests passed before publication.'
   echo '- Upstream scripts were not executed. Live Claude Code/Codex behavior is not certified by this check.'
   echo "- Sync run: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
   echo

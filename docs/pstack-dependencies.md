@@ -29,6 +29,10 @@ Repository tests prove source hashes, metadata generation, selected-skill discov
 
 ## Upstream updates
 
-The existing daily synchronization includes both sources. Skill text is copied unchanged; only the Claude Code manifest is generated locally. Review changes to the selected paths and any new external dependencies before merging a sync PR. Changes to the manifest selection belong in `upstreams.json`, not inside vendored skill files.
+The existing daily synchronization includes both sources. Skill text is copied
+unchanged. The Claude Code manifest and Codex harness are generated locally from
+the pinned tree. Review changes to the selected paths and any new external
+dependencies before merging a sync PR. Changes to the manifest selection belong
+in `upstreams.json`, not inside vendored skill files.
 
 References: [upstream companion list](https://github.com/cursor/plugins/tree/main/pstack#not-shipped-here), [Claude Code adapter](https://github.com/cursor/plugins/blob/main/harness/pstack/claude-code/docs/harness/claude-code.md), [Claude Code manifest paths](https://code.claude.com/docs/en/plugins-reference#path-only-fields).

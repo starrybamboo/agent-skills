@@ -5,10 +5,14 @@
   "type": "module",
   "description": "Pinned upstream agent skill collections, with reproducible synchronization",
   "scripts": {
-    "sync:upstreams": "node scripts/upstreams.mjs sync",
+    "sync:upstreams": "node scripts/upstreams.mjs sync && node scripts/codex-harness.mjs sync",
     "validate": "node scripts/upstreams.mjs verify",
+    "codex:sync": "node scripts/codex-harness.mjs sync",
+    "codex:check": "node scripts/codex-harness.mjs check",
+    "codex:install": "node scripts/codex-harness.mjs install",
+    "codex:status": "node scripts/codex-harness.mjs status",
     "audit:skills": "node scripts/audit-skills.mjs",
-    "test": "npm run validate && node --test scripts/*.test.mjs"
+    "test": "npm run validate && npm run codex:check && node --test scripts/*.test.mjs"
   },
   "engines": {
     "node": ">=22"

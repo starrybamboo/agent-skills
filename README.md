@@ -33,9 +33,35 @@ Do not install another copy of pstack from `cursor-plugins` at the same time. Th
 
 If this marketplace is already installed, run `/plugin marketplace update starrybamboo-skills` before installing the companion plugin. Its commands are `/cursor-team-kit:deslop`, `/cursor-team-kit:control-cli`, `/cursor-team-kit:control-ui`, and `/cursor-team-kit:verify-this`. See [dependency coverage](docs/pstack-dependencies.md) for what can and cannot be installed this way.
 
-## Codex and existing installations
+## Codex
 
-This release packages the upstream **Claude Code plugin**, not a verified Codex port. Reading a SKILL.md in Codex is not evidence that its tool names, agents, model selection, looping, or companion-plugin dependencies work there. Codex integration remains a separate task; do not flatten this plugin with `npx skills --skill '*'`.
+The repository also generates an explicit Codex harness from the same pinned
+`plugins/pstack` tree. It exposes `$pstack` plus the 57 upstream
+human-invocable Skills, including `$bro`, `$architect`, and `$how`. The
+explicit entries do not auto-inject; `$pstack` remains the workflow router.
+
+The harness maps Claude/Cursor tools to Codex at execution time. It does not
+claim that Cursor Automations, cloud agents, Claude model slugs, or the
+Claude/Cursor `setup-pstack` rule are portable. See
+[the Codex harness document](docs/codex-harness.md).
+
+Generate, verify, and install:
+
+```bash
+npm run codex:sync
+npm run codex:check
+npm run codex:install
+npm run codex:status
+```
+
+`codex:install` copies the generated skills and the pinned pstack payload under
+`$CODEX_HOME` (default `~/.codex`). It does not depend on a Claude plugin cache
+after installation. Run `codex:sync` after pulling a new repository revision,
+then `codex:install` to replace the generated user-level copy.
+
+`sync:upstreams` now regenerates the Codex harness in the same operation as the
+Claude plugin. The daily workflow therefore proposes both generated targets in
+one draft PR.
 
 The previous 40 locally maintained skills have been removed from the current catalog. Their full source remains in Git history at [`867b619`](https://github.com/starrybamboo/agent-skills/tree/867b61913524568f30b022d24793b51a29b4b60d). There is no discoverable archive directory containing retired skills.
 
@@ -71,7 +97,11 @@ The checkout must be clean in the imported directory. Synchronization never exec
 
 The [complete skill audit](docs/skill-audit.md) covers all active entries, external references, invocation flags and known Claude Code limitations at the recorded upstream revision. Run `npm run audit:skills` to check the current distribution for broken relative links and unclassified named-skill references. Host limitations are reported separately from missing files.
 
-`npm test` verifies plugin identity, license presence, every imported file hash and executable flag, complete source configuration, generated skill indexes, marketplace entries, and migration/synchronization behavior in temporary fixtures. It also rejects retired root skills and unexpected plugin directories.
+`npm test` verifies plugin identity, license presence, every imported file hash
+and executable flag, complete source configuration, generated skill indexes,
+marketplace entries, the generated Codex harness, install conflict handling, and
+migration/synchronization behavior in temporary fixtures. It also rejects
+retired root skills and unexpected plugin directories.
 
 This is distribution-integrity verification, **not** proof that every upstream workflow works in a live Claude Code session or any Codex session. Review upstream behavioral changes before merging. Only the companion skills listed above are exposed; external services and Cursor built-ins are not installed.
 

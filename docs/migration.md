@@ -18,9 +18,15 @@ The previous manager calls `validateCatalog` before writing installation state. 
 
 ## What has not been adapted
 
-The official pstack Claude Code distribution includes its own adapter. Its model fallback and unavailable Cursor-only features are defined upstream. This collection does not invent tool mappings or silently turn those steps into successes.
+The official pstack Claude Code distribution includes its own adapter. Its model
+fallback and unavailable Cursor-only features are defined upstream. This
+collection does not invent tool mappings or silently turn those steps into
+successes.
 
-There is no verified Codex-specific distribution in this release. A future adapter should live outside the imported tree and prove its tool, agent, model, and autonomous-run behavior before becoming a supported installation route.
+The initial catalog migration did not adapt Codex. The collection now generates
+a Codex harness from the same pinned pstack tree; see
+[Codex harness](codex-harness.md). It maps Codex tools explicitly and keeps
+Cursor-only capabilities as reported skips rather than claiming parity.
 
 ## Reintroducing a capability
 

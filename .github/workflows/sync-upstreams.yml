@@ -5,7 +5,10 @@ on:
     paths:
       - upstreams.json
       - scripts/upstreams.mjs
+      - scripts/codex-harness.mjs
       - scripts/publish-sync.sh
+      - harness/codex/adapter/**
+      - package.json
       - .github/workflows/sync-upstreams.yml
   schedule:
     - cron: '17 2 * * *'
