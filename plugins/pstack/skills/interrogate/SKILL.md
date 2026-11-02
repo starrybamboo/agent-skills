@@ -20,6 +20,8 @@ Run Phase A steps 3 and 4 and Phase B of the **arena** skill, with four changes.
 
 > Break this change. Prove each finding with a run against the real code, such as a failing test, a repro script, or command output that shows the wrong behavior. For a design or plan, run a prototype or probe the current tree. Keep repros in your own worktree. Report each finding with a title, the exact command, the output it printed, and the output the intent requires. Leave out anything you did not run. That covers style, naming, structure, and risks that need a future change to matter. No findings is a valid result.
 
+In Claude Code, run a `codex:` entry in `interrogate reviewers` through the script in the adapter's Non-Claude seats section. It gets its own worktree and this same brief. Its findings go through Verify like any other adversary's.
+
 ## Verify
 
 Verify each finding per arena Phase F by rerunning its command. Keep a finding when the output shows the failure and the failure breaks the intent. Drop the rest. Merge findings that share a root cause.

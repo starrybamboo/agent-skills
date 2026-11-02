@@ -1,0 +1,93 @@
+diff --git a/plugins/pstack/docs/harness/claude-code.md b/plugins/pstack/docs/harness/claude-code.md
+index bf154e6..1d3a208 100644
+--- a/plugins/pstack/docs/harness/claude-code.md
++++ b/plugins/pstack/docs/harness/claude-code.md
+@@ -37,11 +37,26 @@ pstack skills use Cursor names. In Claude Code, read this file once per session,
+ | The `pstack-models.mdc` rule, `~/.cursor/rules/pstack-models.mdc` | `~/.claude/rules/pstack-models.md`. Claude Code loads it into every new session, so its role lines are already in context. If they are not, read the file. If the file or the role's line is missing, use the skill's default slug. |
+ | A role value `<model> <effort>`, such as `opus high` | `model: "opus"` and `effort: "high"`. |
+ 
++### Non-Claude seats
++
++A role entry `codex:<model> <effort>`, such as `codex:gpt-6.1-sol xhigh`, is a seat on another model family. `Agent` cannot run it, so never pass it as `model` and never fall back to the session model. Run it from `Bash` in the background:
++
++```bash
++<pstack>/scripts/codex-seat.sh <worktree> <model> <effort> <brief-file> <output-file> [read-only]
++```
++
++- Give each writing seat its own worktree with its dependencies installed. Pass `read-only` for a seat that only judges.
++- Put the seat's whole prompt in `<brief-file>`. `<output-file>` holds its transcript, and its final message is its report.
++- The script's exit code is the seat's. A nonzero exit is a dropout: say so and continue with the other seats.
++- The model comes from the user's Codex configuration, so a seat needs a working `codex` login or gateway.
++- Families go by model: `codex:gpt-*`, `codex:grok-*`, `codex:k3`, `codex:glm-*`, and `codex:deepseek-*` are each a family other than Claude. Any of them can serve where a skill asks for another family.
++
+ ## setup-pstack
+ 
+ Claude Code loads every `.md` file in `~/.claude/rules/` into each new session, so `setup-pstack` writes its rule there. Follow its steps with these changes:
+ 
+ - Detect. The detected models are the `model` values that the `Agent` tool schema lists, each with an effort from its `effort` values. Write a real model as `<model> <effort>`, such as `opus xhigh`. The effort is the last token, so the budget step works as written.
++- Keep. A role entry that starts with `codex:` is a real seat. Keep it as written when you rewrite the file, and never mark it as undetected.
+ - Defaults. Map each default slug with the rows above: `claude-opus-5-5-xhigh` is `opus xhigh`, and `grok-4.7-xhigh-fast` is `inherit-parent`.
+ - Write. Write `~/.claude/rules/pstack-models.md` with no frontmatter, then the comment lines, the `# budget` line, and one line per role from step 5. Overwrite the whole file. Never put the role lines in `CLAUDE.md` or `AGENTS.md`.
+ 
+diff --git a/plugins/pstack/scripts/codex-seat.sh b/plugins/pstack/scripts/codex-seat.sh
+new file mode 100755
+index 0000000..ca15b3f
+--- /dev/null
++++ b/plugins/pstack/scripts/codex-seat.sh
+@@ -0,0 +1,30 @@
++#!/usr/bin/env bash
++# Runs one non-Claude seat through Codex and returns the seat's real exit code.
++set -euo pipefail
++
++if [[ $# -lt 5 || $# -gt 6 ]]; then
++  echo 'Usage: codex-seat.sh <worktree> <model> <effort> <brief-file> <output-file> [read-only]' >&2
++  exit 2
++fi
++worktree=$1 model=$2 effort=$3 brief=$4 output=$5 sandbox=workspace-write
++if [[ $# -eq 6 ]]; then
++  [[ $6 == read-only ]] || { echo "Unknown mode: $6" >&2; exit 2; }
++  sandbox=read-only
++fi
++
++# A local gateway must not go through an HTTP proxy.
++export NO_PROXY="127.0.0.1,localhost${NO_PROXY:+,$NO_PROXY}"
++export no_proxy="$NO_PROXY"
++
++prompt=$(<"$brief")
++cd "$worktree"
++limit=${CODEX_SEAT_TIMEOUT:-1500}
++runner=()
++if command -v timeout >/dev/null; then runner=(timeout "$limit"); fi
++set +e
++"${runner[@]}" codex exec --skip-git-repo-check -s "$sandbox" -m "$model" \
++  -c "model_reasoning_effort=\"$effort\"" "$prompt" </dev/null >"$output" 2>&1
++code=$?
++set -e
++echo "$model exit=$code"
++exit "$code"
+diff --git a/plugins/pstack/skills/arena/SKILL.md b/plugins/pstack/skills/arena/SKILL.md
+index 0daa7c5..6d615c0 100644
+--- a/plugins/pstack/skills/arena/SKILL.md
++++ b/plugins/pstack/skills/arena/SKILL.md
+@@ -19,6 +19,8 @@ Every candidate gets the same prompt, so the prompt is the contract.
+ 3. Pick the runners. Use the `arena runners` line in `~/.cursor/rules/pstack-models.mdc`. If the rule or that line is missing, default to one each on `claude-opus-5-5-xhigh` and `grok-4.7-xhigh-fast`. An `auto` or `inherit-parent` entry in this line means the parent model, so omit `model` for it. If the Task tool rejects a configured entry, run that seat on its family's default and say so. Families go by prefix: `claude-*`, and `grok-*` with `cursor-grok-*` and `composer-*`. A refused `composer-*` entry runs on `grok-4.7-xhigh-fast`. If the family has no default, or the Task tool rejects that default, use the closest valid slug of the same family from its error message, or drop the seat and say so when there is none. If dropped seats leave fewer than two runners, add runners until there are two, or one when the line has one entry. Run each added runner on a remaining runner's model, or omit `model` so it runs on the parent model when none remain, and say so. Spawn more runners when the arena covers multiple design directions. Use the same model N times when the work is generation-bound rather than judgment-sensitive. Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section of the **poteto-mode** skill.
+ 4. Give each candidate its own output location (a git worktree where possible, otherwise `/tmp/arena-<slug>/candidate-<n>/`), per the **separate-before-serializing-shared-state** principle skill.
+ 
++In Claude Code, a `codex:` entry in `arena runners` or `arena cross-judge pool` runs through the script in the adapter's Non-Claude seats section, and the adapter names its family. A `codex:` judge runs `read-only`.
++
+ ## Phase B: Fan out
+ 
+ Spawn all N subagents in one message with `run_in_background: true`, each with the task, the path to the shared grounding, its own output path, and instructions to produce the artifact and a short rationale naming the alternatives it considered and what it rejected.
+diff --git a/plugins/pstack/skills/interrogate/SKILL.md b/plugins/pstack/skills/interrogate/SKILL.md
+index 3e70013..63ef620 100644
+--- a/plugins/pstack/skills/interrogate/SKILL.md
++++ b/plugins/pstack/skills/interrogate/SKILL.md
+@@ -20,6 +20,8 @@ Run Phase A steps 3 and 4 and Phase B of the **arena** skill, with four changes.
+ 
+ > Break this change. Prove each finding with a run against the real code, such as a failing test, a repro script, or command output that shows the wrong behavior. For a design or plan, run a prototype or probe the current tree. Keep repros in your own worktree. Report each finding with a title, the exact command, the output it printed, and the output the intent requires. Leave out anything you did not run. That covers style, naming, structure, and risks that need a future change to matter. No findings is a valid result.
+ 
++In Claude Code, run a `codex:` entry in `interrogate reviewers` through the script in the adapter's Non-Claude seats section. It gets its own worktree and this same brief. Its findings go through Verify like any other adversary's.
++
+ ## Verify
+ 
+ Verify each finding per arena Phase F by rerunning its command. Keep a finding when the output shows the failure and the failure breaks the intent. Drop the rest. Merge findings that share a root cause.

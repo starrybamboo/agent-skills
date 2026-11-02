@@ -37,7 +37,7 @@ trap 'rm -f "$body"' EXIT
   echo
   node --input-type=module -e "import fs from 'node:fs'; for(const s of JSON.parse(fs.readFileSync('upstreams.lock.json','utf8')).sources) console.log('- '+s.name+' '+s.version+': https://github.com/'+s.repository+'/commit/'+s.revision)"
   echo
-  echo 'Imported source files remain unchanged. Reviewed collection adapters generate host metadata only.'
+  echo 'Imported source files are unchanged except for the marked edits in patches/. Reviewed collection adapters generate host metadata only.'
   echo
   echo 'The Codex harness is generated from the same pinned pstack tree.'
   echo

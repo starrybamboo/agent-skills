@@ -37,11 +37,26 @@ pstack skills use Cursor names. In Claude Code, read this file once per session,
 | The `pstack-models.mdc` rule, `~/.cursor/rules/pstack-models.mdc` | `~/.claude/rules/pstack-models.md`. Claude Code loads it into every new session, so its role lines are already in context. If they are not, read the file. If the file or the role's line is missing, use the skill's default slug. |
 | A role value `<model> <effort>`, such as `opus high` | `model: "opus"` and `effort: "high"`. |
 
+### Non-Claude seats
+
+A role entry `codex:<model> <effort>`, such as `codex:gpt-6.1-sol xhigh`, is a seat on another model family. `Agent` cannot run it, so never pass it as `model` and never fall back to the session model. Run it from `Bash` in the background:
+
+```bash
+<pstack>/scripts/codex-seat.sh <worktree> <model> <effort> <brief-file> <output-file> [read-only]
+```
+
+- Give each writing seat its own worktree with its dependencies installed. Pass `read-only` for a seat that only judges.
+- Put the seat's whole prompt in `<brief-file>`. `<output-file>` holds its transcript, and its final message is its report.
+- The script's exit code is the seat's. A nonzero exit is a dropout: say so and continue with the other seats.
+- The model comes from the user's Codex configuration, so a seat needs a working `codex` login or gateway.
+- Families go by model: `codex:gpt-*`, `codex:grok-*`, `codex:k3`, `codex:glm-*`, and `codex:deepseek-*` are each a family other than Claude. Any of them can serve where a skill asks for another family.
+
 ## setup-pstack
 
 Claude Code loads every `.md` file in `~/.claude/rules/` into each new session, so `setup-pstack` writes its rule there. Follow its steps with these changes:
 
 - Detect. The detected models are the `model` values that the `Agent` tool schema lists, each with an effort from its `effort` values. Write a real model as `<model> <effort>`, such as `opus xhigh`. The effort is the last token, so the budget step works as written.
+- Keep. A role entry that starts with `codex:` is a real seat. Keep it as written when you rewrite the file, and never mark it as undetected.
 - Defaults. Map each default slug with the rows above: `claude-opus-5-5-xhigh` is `opus xhigh`, and `grok-4.7-xhigh-fast` is `inherit-parent`.
 - Write. Write `~/.claude/rules/pstack-models.md` with no frontmatter, then the comment lines, the `# budget` line, and one line per role from step 5. Overwrite the whole file. Never put the role lines in `CLAUDE.md` or `AGENTS.md`.
 

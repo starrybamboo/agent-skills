@@ -7,7 +7,8 @@
       "ref": "main",
       "path": "harness/pstack/claude-code",
       "destination": "plugins/pstack",
-      "license": "MIT"
+      "license": "MIT",
+      "patches": "patches/pstack"
     },
     {
       "name": "cursor-team-kit",
