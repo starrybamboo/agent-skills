@@ -4,13 +4,13 @@ A collection of upstream agent tools maintained by `starrybamboo`. Start with ps
 
 ## What ships
 
-- `plugins/pstack/` is an unchanged copy of `cursor/plugins/harness/pstack/claude-code`, including skills, agents, documentation, scripts, assets, plugin metadata, and license.
+- `plugins/pstack/` is a copy of `cursor/plugins/harness/pstack/claude-code` with the edits in `patches/pstack/` applied, including skills, agents, documentation, scripts, assets, plugin metadata, and license.
 - `plugins/cursor-team-kit/upstream/` preserves the Cursor Team Kit source unchanged. A generated Claude Code manifest exposes the three pstack dependencies (`deslop`, `control-cli`, `control-ui`) and their companion `verify-this`. Other kit workflows, agents, and Cursor rules are not activated.
 - `upstreams.json` selects the source repository, tracking branch, source directory, and destination.
 - `upstreams.lock.json` records the exact upstream commit, plugin version, and every file's hash and executable flag.
 - `skills-manifest.json` and `skills-router.json` are generated discovery indexes, not a flat global-skill installation manifest.
 
-Do not edit files under `plugins/pstack/`. Propose a change upstream or add a separate, explicitly selected supplement. Do not change upstream invocation flags, role defaults, or workflow rules to fit old local skills.
+Do not edit files under `plugins/pstack/` by hand. To change upstream behavior, edit the source in a clean tree, save the diff in `patches/pstack/`, list it in `patches/pstack/README.md`, and run the sync. Vendored files carry no local markers; the patch directory is the record of every local change. A patch that no longer applies stops the sync and leaves the distribution unchanged. Do not change upstream invocation flags, role defaults, or workflow rules to fit old local skills.
 
 ## Claude Code
 

@@ -68,6 +68,48 @@ test('rejects local vendor edits before replacing anything', async t => {
   assert.deepEqual(await inventory(f.base), before);
 });
 
+async function patched(f) {
+  await write(path.join(f.base, 'patches/pstack/0001-demo.patch'), `--- a/plugins/pstack/LICENSE
++++ b/plugins/pstack/LICENSE
+@@ -1,2 +1,3 @@
+ MIT License
+ Permission is hereby granted
++<!-- starrybamboo:demo -->
+`);
+  f.config.sources[0].patches = 'patches/pstack';
+  await write(path.join(f.base, 'upstreams.json'), encode(f.config));
+}
+
+test('marked patches survive a sync and are recorded in the lock', async t => {
+  const f = await fixture(t);
+  await patched(f);
+  await f.run();
+  assert.match(await fs.readFile(path.join(f.base, 'plugins/pstack/LICENSE'), 'utf8'), /starrybamboo:demo/);
+  const lock = JSON.parse(await fs.readFile(path.join(f.base, 'upstreams.lock.json'), 'utf8'));
+  assert.deepEqual(Object.keys(lock.sources[0].patchFiles), ['0001-demo.patch']);
+  await f.run();
+  await verify(f.base);
+});
+
+test('a patch that no longer applies stops the sync and changes nothing', async t => {
+  const f = await fixture(t);
+  await patched(f);
+  await f.run();
+  await write(path.join(f.dir, 'LICENSE'), 'Changed MIT License\nPermission is hereby granted, again\n');
+  f.commit();
+  const before = await inventory(f.base);
+  await assert.rejects(f.run(), /Patch no longer applies/);
+  assert.deepEqual(await inventory(f.base), before);
+});
+
+test('changing a patch without syncing fails verification', async t => {
+  const f = await fixture(t);
+  await patched(f);
+  await f.run();
+  await fs.appendFile(path.join(f.base, 'patches/pstack/0001-demo.patch'), '\n');
+  await assert.rejects(verify(f.base), /Patches differ from lock/);
+});
+
 test('malformed candidate leaves existing distribution unchanged', async t => {
   const f = await fixture(t);
   await f.run();

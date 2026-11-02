@@ -8,8 +8,12 @@
       "path": "harness/pstack/claude-code",
       "destination": "plugins/pstack",
       "license": "MIT",
+      "patches": "patches/pstack",
       "revision": "ae5650febf4320793844c12c4adaa937f417f8da",
       "version": "0.15.36",
+      "patchFiles": {
+        "0001-multi-model-seats.patch": "8053dfaf3a05b432b6d79da3060bbca5cd0f4c289e7a6791dc3fb8ca3a60a2ff"
+      },
       "files": {
         ".claude-plugin/plugin.json": {
           "sha256": "ebc3ee08ceff88b13521cabd714d92b972fbe9c5b77116f94872ee848b225b31",
@@ -92,7 +96,7 @@
           "executable": false
         },
         "docs/harness/claude-code.md": {
-          "sha256": "c79e2283d3a83c6be3dd1cac33f9c074067c95e610ae6e0a16d9fdee84058927",
+          "sha256": "4de988599a8ddd7dd1b64c48c1758276b352b068d6cc0a3c8ce9fc4c693b25be",
           "executable": false
         },
         "LICENSE": {
@@ -106,6 +110,10 @@
         "README.md": {
           "sha256": "9b774ecfa5c74981d341968fb1ae0c7a4b4acb0ed4558875c5c152f5101a9284",
           "executable": false
+        },
+        "scripts/codex-seat.sh": {
+          "sha256": "a6b8508df8b13be0574fadc22246e196a8fd9bc3eab888a81021c61471f473cf",
+          "executable": true
         },
         "skills/architect/references/design-red-flags.md": {
           "sha256": "d0e639e4cc588ec865f930d3a4111faad60987ae36925917e319d7ceca7c69ce",
@@ -124,7 +132,7 @@
           "executable": false
         },
         "skills/arena/SKILL.md": {
-          "sha256": "a70df68e26420f783b09ac10b1ce6951b1438fa2233d5a0a5ad789720ba9c7b5",
+          "sha256": "67c0df08eda27137608f8dd1f6a4eb27451a5c970e53dd1602de33eba00e2741",
           "executable": false
         },
         "skills/automate-me/SKILL.md": {
@@ -188,7 +196,7 @@
           "executable": false
         },
         "skills/interrogate/SKILL.md": {
-          "sha256": "41358b680e1d585ee35f2b58d93e11eda8c02e3f1c5f5b50c565a173d8e37eed",
+          "sha256": "62b4d4cbe7ccb27b78e40a88bd690ecabe1f633d8606d3396d691d637cea641f",
           "executable": false
         },
         "skills/ketchup-video/SKILL.md": {

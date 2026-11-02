@@ -31,6 +31,7 @@ export async function configuration(base) {
       !Array.isArray(source.adapter.skills) || source.adapter.skills.length === 0 ||
       new Set(source.adapter.skills).size !== source.adapter.skills.length ||
       !source.adapter.skills.every(name => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name)))) throw new Error('Invalid Cursor skill selection');
+    if (source.patches !== undefined && source.patches !== `patches/${source.name}`) throw new Error('Patches must live in patches/<source name>');
     names.add(source.name);
   }
   return config;
@@ -50,6 +51,23 @@ export async function inventory(directory) {
   }
   await walk(directory);
   return Object.fromEntries(Object.entries(files).sort(([a], [b]) => a.localeCompare(b, 'en')));
+}
+
+async function patchFiles(base, source) {
+  if (!source.patches) return {};
+  const directory = path.join(base, source.patches);
+  const names = (await fs.readdir(directory)).filter(name => name.endsWith('.patch')).sort();
+  if (!names.length) throw new Error(`No patches found: ${source.name}`);
+  const hashes = {};
+  for (const name of names) hashes[name] = createHash('sha256').update(await fs.readFile(path.join(directory, name))).digest('hex');
+  return hashes;
+}
+
+async function applyPatches(base, stage, source) {
+  for (const name of Object.keys(await patchFiles(base, source))) {
+    try { execFileSync('git', ['apply', '--whitespace=nowarn', path.join(base, source.patches, name)], { cwd: stage, stdio: 'pipe' }); }
+    catch (error) { throw new Error(`Patch no longer applies: ${source.patches}/${name}\n${error.stderr ?? ''}`); }
+  }
 }
 
 async function describe(directory, source) {
@@ -89,10 +107,11 @@ async function generated(base, config) {
   for (let i = 0; i < config.sources.length; i++) {
     const source = config.sources[i];
     const pin = lock.sources[i];
-    for (const key of ['name', 'repository', 'ref', 'path', 'destination', 'license', 'adapter']) {
+    for (const key of ['name', 'repository', 'ref', 'path', 'destination', 'license', 'adapter', 'patches']) {
       if (encode(pin[key]) !== encode(source[key])) throw new Error(`Source configuration drift: ${key}`);
     }
     if (!/^[a-f0-9]{40}$/.test(pin.revision)) throw new Error('Invalid source revision');
+    if (encode(await patchFiles(base, source)) !== encode(pin.patchFiles ?? {})) throw new Error(`Patches differ from lock: ${source.name}`);
     const dir = path.join(base, source.destination);
     const actual = await inventory(dir);
     if (encode(actual) !== encode(pin.files)) throw new Error(`Vendored tree differs from lock: ${source.name}`);
@@ -169,13 +188,16 @@ export async function sync(base = root, localSources = {}) {
         await fs.writeFile(path.join(to, '.claude-plugin/plugin.json'), encode(await cursorManifest(from, source)));
         await fs.copyFile(path.join(from, 'LICENSE'), path.join(to, 'LICENSE'));
       } else await fs.cp(from, to, { recursive: true, preserveTimestamps: true });
+      await applyPatches(base, stage, source);
       const description = await describe(to, source);
-      pins.push({ ...source, revision, version: description.version, files: await inventory(to) });
+      const patchHashes = await patchFiles(base, source);
+      pins.push({ ...source, revision, version: description.version, ...(source.patches ? { patchFiles: patchHashes } : {}), files: await inventory(to) });
     }
     await fs.writeFile(path.join(stage, 'upstreams.json'), encode(config));
     await fs.writeFile(path.join(stage, 'upstreams.lock.json'), encode({ schemaVersion: 1, sources: pins }));
     await fs.mkdir(path.join(stage, '.claude-plugin'));
     await fs.copyFile(path.join(base, '.claude-plugin/marketplace.json'), path.join(stage, '.claude-plugin/marketplace.json'));
+    for (const source of config.sources) if (source.patches) await fs.cp(path.join(base, source.patches), path.join(stage, source.patches), { recursive: true });
     const output = await generated(stage, config);
     await fs.writeFile(path.join(stage, 'skills-manifest.json'), encode(output.manifest));
     await fs.writeFile(path.join(stage, 'skills-router.json'), encode(output.router));

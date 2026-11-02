@@ -21,7 +21,7 @@ test('every active skill is inventoried and named references resolve or have exp
 test('a valid distribution with a newly broken link and unknown skill is not reported as resolved', async t => {
   const base = await fs.mkdtemp(path.join(os.tmpdir(), 'skills-audit-test-'));
   t.after(() => fs.rm(base, { recursive: true, force: true }));
-  for (const name of ['plugins', '.claude-plugin', 'upstreams.json', 'upstreams.lock.json', 'skills-manifest.json', 'skills-router.json']) {
+  for (const name of ['plugins', 'patches', '.claude-plugin', 'upstreams.json', 'upstreams.lock.json', 'skills-manifest.json', 'skills-router.json']) {
     await fs.cp(path.join(root, name), path.join(base, name), { recursive: true });
   }
   const file = path.join(base, 'plugins/pstack/skills/poteto-mode/SKILL.md');
