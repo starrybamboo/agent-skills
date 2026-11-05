@@ -9,7 +9,7 @@
       "destination": "plugins/pstack",
       "license": "MIT",
       "patches": "patches/pstack",
-      "revision": "ae5650febf4320793844c12c4adaa937f417f8da",
+      "revision": "bb68f2365eceafa0cb2d253112f675acf5f144cc",
       "version": "0.15.36",
       "patchFiles": {
         "0001-multi-model-seats.patch": "8053dfaf3a05b432b6d79da3060bbca5cd0f4c289e7a6791dc3fb8ca3a60a2ff"
@@ -2273,7 +2273,7 @@
           "verify-this"
         ]
       },
-      "revision": "ae5650febf4320793844c12c4adaa937f417f8da",
+      "revision": "bb68f2365eceafa0cb2d253112f675acf5f144cc",
       "version": "1.2.0",
       "files": {
         ".claude-plugin/plugin.json": {
