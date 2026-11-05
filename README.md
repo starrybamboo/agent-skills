@@ -73,6 +73,8 @@ GitHub Actions checks upstream daily at **02:17 UTC (10:17 UTC+8)**, and can als
 
 When content changes, the job copies the upstream distributions, regenerates the reviewed adapter metadata, lock and indexes, runs this repository's tests, and opens or updates one **draft** PR on `sync/pstack`. It does not force-push, auto-merge, deploy, or install anything on your computers. A failed check stops publication. A no-change run creates no commit or PR.
 
+Publication compares the final sync tree with `origin/main`, including changes already on the sync branch. If only upstream commit revisions and their generated source annotations changed, it skips the commit, push, and PR update. Imported file content, additions, deletions, executable flags, plugin versions, and generated behavior changes still produce a draft update. A skipped run leaves the published pins unchanged until a substantive update is proposed; it does not close an existing PR.
+
 The workflow uses GitHub's temporary `GITHUB_TOKEN`, not a personal access token. GitHub must allow Actions to create pull requests in this repository. If that setting is disabled, the job reports the blocker; it does not change security settings. The sync job runs tests itself rather than assuming a bot-created PR automatically starts CI. GitHub may require approval of the separate PR workflow.
 
 Review upstream changes and merge the PR to promote them into this collection. Local plugin updates are separate. There is no hidden local auto-update job in this repository.

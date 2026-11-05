@@ -5,30 +5,33 @@ if [[ "$(git branch --show-current)" != 'sync/pstack' ]]; then
   exit 1
 fi
 stage_paths=(plugins upstreams.lock.json skills-manifest.json skills-router.json)
-if [[ -d harness/codex ]]; then stage_paths+=(harness/codex); fi
+if [[ -d harness/codex ]] || [[ -n "$(git ls-files -- harness/codex)" ]]; then stage_paths+=(harness/codex); fi
 git add -- "${stage_paths[@]}"
 while IFS= read -r -d '' file; do
   case "$file" in
     plugins/*|harness/codex/*|upstreams.lock.json|skills-manifest.json|skills-router.json) ;;
     *) echo "Unexpected staged change: $file" >&2; exit 1 ;;
   esac
-done < <(git diff --cached --name-only -z)
-if ! git diff --cached --quiet; then
-  revision=$(node -p "JSON.parse(require('fs').readFileSync('upstreams.lock.json','utf8')).sources.map(s=>s.name+'@'+s.revision.slice(0,12)).join(', ')")
-  git commit -m "chore: sync upstream skills ($revision)"
-fi
-if git diff --quiet origin/main HEAD -- plugins upstreams.lock.json skills-manifest.json skills-router.json; then
-  if [[ ! -d harness/codex ]] || git diff --quiet origin/main HEAD -- harness/codex; then
-    echo 'No upstream changes to propose.'
-    exit 0
-  fi
-fi
+done < <(git diff --cached --no-renames --name-only -z)
+candidate=$(git write-tree)
 while IFS= read -r -d '' file; do
   case "$file" in
     plugins/*|harness/codex/*|upstreams.lock.json|skills-manifest.json|skills-router.json) ;;
     *) echo "Unexpected sync branch change: $file" >&2; exit 1 ;;
   esac
-done < <(git diff --name-only -z origin/main HEAD)
+done < <(git diff --no-renames --name-only -z origin/main "$candidate")
+# Compare the final tree with main, including real changes already on sync/pstack.
+# Revision-only churn must not create a commit, push, or create/update a PR.
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+has_changes=$(node "$script_dir/sync-changes.mjs" origin/main "$candidate")
+if [[ "$has_changes" == 'false' ]]; then
+  echo 'No substantive upstream changes to propose (source revision metadata only, or no changes).'
+  exit 0
+fi
+if ! git diff --cached --quiet; then
+  revision=$(node -p "JSON.parse(require('fs').readFileSync('upstreams.lock.json','utf8')).sources.map(s=>s.name+'@'+s.revision.slice(0,12)).join(', ')")
+  git commit -m "chore: sync upstream skills ($revision)"
+fi
 git push origin HEAD:refs/heads/sync/pstack
 body=$(mktemp)
 trap 'rm -f "$body"' EXIT

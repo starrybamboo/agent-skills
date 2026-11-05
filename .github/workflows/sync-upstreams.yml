@@ -7,6 +7,7 @@ on:
       - scripts/upstreams.mjs
       - scripts/codex-harness.mjs
       - scripts/publish-sync.sh
+      - scripts/sync-changes.mjs
       - harness/codex/adapter/**
       - package.json
       - .github/workflows/sync-upstreams.yml
